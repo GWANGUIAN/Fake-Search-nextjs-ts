@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { CHANGEPROFILE, RESETPROFILE } from '../actions/index';
 
 const profileReducer = (
@@ -11,7 +12,7 @@ const profileReducer = (
     info: [{title:'',content:''}],
     subinfo: [],
   },
-  action
+  action: AnyAction
 ) => {
   switch (action.type) {
     case CHANGEPROFILE:

@@ -13,4 +13,5 @@ const rootReducer = combineReducers({
   musicReducer,
 });
 
+export type ReducerType = ReturnType<typeof rootReducer>;
 export default rootReducer;

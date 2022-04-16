@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { CHANGENEWS, RESETNEWS } from '../actions/index';
 
 const newsReducer = (
@@ -7,7 +8,7 @@ const newsReducer = (
     order: 2,
     content: [{title:'', content: '', datetime: '', reporter:'', img:''}],
   },
-  action
+  action: AnyAction
 ) => {
   switch (action.type) {
     case CHANGENEWS:

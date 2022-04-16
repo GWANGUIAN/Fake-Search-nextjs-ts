@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { LOGIN, LOGOUT } from '../actions/index';
 
 const loginReducer = (
@@ -8,7 +9,7 @@ const loginReducer = (
     siteName: '',
     themeColor: '#2260FF',
   },
-  action
+  action: AnyAction
 ) => {
   switch (action.type) {
     case LOGIN:

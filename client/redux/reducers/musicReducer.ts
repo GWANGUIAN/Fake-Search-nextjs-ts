@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { CHANGEMUSIC, RESETMUSIC } from '../actions/index';
 
 const musicReducer = (
@@ -11,7 +12,7 @@ const musicReducer = (
     title: '',
     artist: ''
   },
-  action
+  action: AnyAction
 ) => {
   switch (action.type) {
     case CHANGEMUSIC:

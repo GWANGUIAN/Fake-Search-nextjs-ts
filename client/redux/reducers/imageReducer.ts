@@ -1,3 +1,4 @@
+import { AnyAction } from "redux";
 import { CHANGEIMAGE, RESETIMAGE } from '../actions/index';
 
 const imageReducer = (
@@ -7,7 +8,7 @@ const imageReducer = (
     order: 3,
     content: {img1:'',img2:'',img3:'',img4:''}
   },
-  action
+  action: AnyAction
 ) => {
   switch (action.type) {
     case CHANGEIMAGE:
