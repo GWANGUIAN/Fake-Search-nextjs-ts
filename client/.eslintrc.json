@@ -320,7 +320,6 @@
       "unicorn/better-regex": "error",
       "unicorn/catch-error-name": "error",
       "unicorn/consistent-destructuring": "error",
-      // "unicorn/consistent-function-scoping": "error",
       "unicorn/custom-error-definition": "off",
       "unicorn/empty-brace-spaces": "error",
       "unicorn/error-message": "error",
@@ -332,7 +331,8 @@
         {
           "cases": {
             "kebabCase": true,
-            "pascalCase": true
+            "pascalCase": true,
+            "camelCase": true
           }
         }
       ],
@@ -401,6 +401,7 @@
       "unicorn/prefer-type-error": "error",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/string-content": "off",
-      "unicorn/throw-new-error": "error"
+      "unicorn/throw-new-error": "error",
+      "react/display-name": "off"
     }
 }
