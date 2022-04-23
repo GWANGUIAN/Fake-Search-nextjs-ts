@@ -1,20 +1,21 @@
-import { AnyAction } from "redux";
-import { CHANGEIMAGE, RESETIMAGE } from '../actions/index';
+import type { AnyAction } from 'redux';
+
+import { CHANGEIMAGE, RESETIMAGE } from '../actions';
 
 const imageReducer = (
   state = {
     type: 'image',
     view: 0,
     order: 3,
-    content: {img1:'',img2:'',img3:'',img4:''}
+    content: { img1: '', img2: '', img3: '', img4: '' },
   },
-  action: AnyAction
+  action: AnyAction,
 ) => {
   switch (action.type) {
     case CHANGEIMAGE:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     case RESETIMAGE:
       return {
@@ -22,7 +23,7 @@ const imageReducer = (
         type: 'image',
         view: 0,
         order: 3,
-        content: {img1:'',img2:'',img3:'',img4:''}
+        content: { img1: '', img2: '', img3: '', img4: '' },
       };
 
     default:

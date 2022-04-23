@@ -1,9 +1,10 @@
-import { combineReducers } from "redux";
-import loginReducer from "./loginReducer";
-import profileReducer from './profileReducer';
-import newsReducer from './newsReducer';
+import { combineReducers } from 'redux';
+
 import imageReducer from './imageReducer';
+import loginReducer from './loginReducer';
 import musicReducer from './musicReducer';
+import newsReducer from './newsReducer';
+import profileReducer from './profileReducer';
 
 const rootReducer = combineReducers({
   loginReducer,

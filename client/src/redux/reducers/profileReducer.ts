@@ -1,5 +1,6 @@
-import { AnyAction } from 'redux';
-import { CHANGEPROFILE, RESETPROFILE } from '../actions/index';
+import type { AnyAction } from 'redux';
+
+import { CHANGEPROFILE, RESETPROFILE } from '../actions';
 
 const profileReducer = (
   state = {
@@ -7,18 +8,18 @@ const profileReducer = (
     order: 1,
     view: 0,
     job: '',
-    profileImg:'',
+    profileImg: '',
     name: '',
-    info: [{title:'',content:''}],
+    info: [{ title: '', content: '' }],
     subinfo: [],
   },
-  action: AnyAction
+  action: AnyAction,
 ) => {
   switch (action.type) {
     case CHANGEPROFILE:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     case RESETPROFILE:
       return {
@@ -27,9 +28,9 @@ const profileReducer = (
         order: 1,
         view: 0,
         job: '',
-        profileImg:'',
+        profileImg: '',
         name: '',
-        info: [{title:'',content:''}],
+        info: [{ title: '', content: '' }],
         subinfo: [],
       };
 
