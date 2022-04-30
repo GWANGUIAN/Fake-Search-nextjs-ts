@@ -1,5 +1,5 @@
 import { compose, createStore, applyMiddleware, Store, AnyAction } from "redux";
-import rootReducer, { ReducerType } from "./reducers";
+import rootReducer, { RootState } from "./reducers";
 import thunk from "redux-thunk";
 import { createWrapper, MakeStore } from "next-redux-wrapper";
 
@@ -18,7 +18,7 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(applyMiddleware(...middleware));
 
-const makeStore: MakeStore<Store<ReducerType, AnyAction>> = () =>
+const makeStore: MakeStore<Store<RootState, AnyAction>> = () =>
   createStore(rootReducer, enhancer);
 
 export const wrapper = createWrapper(makeStore);

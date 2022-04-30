@@ -155,6 +155,10 @@ export const grow = (size: number) => css`
   flex-grow: ${size};
 `;
 
+export const fontColor = (color: string) => css`
+  color: ${color};
+`;
+
 export const pagination = css`
   display: flex;
   justify-content: center;
