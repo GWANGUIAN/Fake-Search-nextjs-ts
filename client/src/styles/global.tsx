@@ -533,6 +533,11 @@ export const display = (mode: string) => css`
   }
 `;
 
+export const displayFlex = (direction = 'row') => css`
+  display: flex;
+  flex-direction: ${direction};
+`;
+
 export const importantDisplay = (mode: string) => css`
   display: ${mode};
   @media (max-width: 1023px) {

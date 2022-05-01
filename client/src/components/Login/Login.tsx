@@ -125,7 +125,7 @@ declare global {
 }
 
 interface LoginProps {
-  login: any;
+  login: React.LegacyRef<HTMLDivElement>;
   loginModal: boolean;
 }
 

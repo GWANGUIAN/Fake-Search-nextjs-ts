@@ -7,7 +7,7 @@ const useManual = () => {
   const NowDate = Date.parse(String(new Date()));
   const [isPopUpOpen, setIsPopUpOpen] = useState(lastDate <= NowDate);
 
-  const setDate = () => {
+  const setDate: () => void = () => {
     localStorage.setItem(
       'manualPopUpDate',
       String(new Date(new Date().setDate(new Date().getDate() + 7))),
