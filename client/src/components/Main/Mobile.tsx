@@ -110,7 +110,7 @@ interface AutoListProps {
 
 const AutoList = ({ el, searchWord, themeColor }: AutoListProps) => (
   <div css={autoListContainer}>
-    <button css="searchButton">
+    <button>
       <FontAwesomeIcon
         icon={faSearch}
         onMouseDown={() => {

@@ -538,6 +538,10 @@ export const displayFlex = (direction = 'row') => css`
   flex-direction: ${direction};
 `;
 
+export const displayNone = css`
+  display: none;
+`;
+
 export const importantDisplay = (mode: string) => css`
   display: ${mode};
   @media (max-width: 1023px) {
