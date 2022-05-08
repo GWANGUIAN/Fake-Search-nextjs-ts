@@ -13,7 +13,6 @@ import Login from '../components/Login/Login';
 import AlertLogin from '../components/Main/AlertLogin';
 import Mobile from '../components/Main/Mobile';
 import Manual from '../components/Manual/Manual';
-import useManual from '../hooks/useMaual';
 import type { RootState } from '../redux/reducers';
 import {
   background,
@@ -243,7 +242,7 @@ const AutoList = ({ el, searchWord, themeColor }: AutoListProps) => (
 );
 
 const Home: NextPage = () => {
-  const [isPopUpOpen, setDate] = useManual();
+  const [isPopUpOpen, setIsPopUpOpen] = useState(true);
   const notification = useRef<HTMLDivElement>(null);
   const login = useRef<HTMLDivElement>(null);
   const btnSetting = useRef<HTMLDivElement>(null);
@@ -339,6 +338,22 @@ const Home: NextPage = () => {
       void router.push('/setting');
     }
   };
+
+  const setDate = () => {
+    localStorage.setItem(
+      'manualPopUpDate',
+      String(new Date(new Date().setDate(new Date().getDate() + 7))),
+    );
+    setIsPopUpOpen(false);
+  };
+
+  useEffect(() => {
+    const localDate =
+      localStorage.getItem('manualPopUpDate') || String(new Date());
+    const lastDate = Date.parse(localDate);
+    const NowDate = Date.parse(String(new Date()));
+    setIsPopUpOpen(lastDate <= NowDate);
+  }, []);
 
   const autoCompleteList = autoComplete.map((el, index) => (
     <AutoList
@@ -538,9 +553,7 @@ const Home: NextPage = () => {
       </MobileOnlyView>
 
       <Login login={login} loginModal={isOpenLogin} />
-      <BrowserView>
-        {isPopUpOpen && <Manual setDate={setDate as () => void} />}
-      </BrowserView>
+      <BrowserView>{isPopUpOpen && <Manual setDate={setDate} />}</BrowserView>
     </>
   );
 };

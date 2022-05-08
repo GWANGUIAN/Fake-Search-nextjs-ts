@@ -215,9 +215,9 @@ const Login = ({ login, loginModal }: LoginProps) => {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_APP_KEY);
-    }
+    // if (typeof window !== 'undefined') {
+    //   window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+    // }
 
     void initializeNaverLogin();
   }, []);
