@@ -139,8 +139,8 @@ const Login = ({ login, loginModal }: LoginProps) => {
 
     naverScript.addEventListener('load', () => {
       const naverLogin = new window.naver.LoginWithNaverId({
-        clientId: process.env.NEXT_APP_NAVER_CLIENT_ID,
-        callbackUrl: process.env.NEXT_APP_REDIRECT_URI,
+        clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
+        callbackUrl: process.env.NEXT_PUBLIC_REDIRECT_URI,
         isPopup: false,
         loginButton: { color: 'white', type: 3, height: '47' },
       });
@@ -159,7 +159,7 @@ const Login = ({ login, loginModal }: LoginProps) => {
           success(res: { id: string }) {
             axios
               .post(
-                `${process.env.REACT_APP_SERVER_API}/users/kakao-login`,
+                `${process.env.NEXT_PUBLIC_SERVER_API}/users/kakao-login`,
                 {
                   identification: res.id,
                 },
@@ -183,7 +183,7 @@ const Login = ({ login, loginModal }: LoginProps) => {
     const { googleId } = response as GoogleLoginResponse;
     axios
       .post(
-        `${process.env.REACT_APP_SERVER_API}/users/google-login`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/users/google-login`,
         {
           identification: googleId,
         },
@@ -203,7 +203,7 @@ const Login = ({ login, loginModal }: LoginProps) => {
 
   const guestLogin = () => {
     axios
-      .post(`${process.env.NEXT_APP_SERVER_API}/users/guest-login`, '', {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/users/guest-login`, '', {
         withCredentials: true,
       })
       .then(() => {
@@ -252,7 +252,7 @@ const Login = ({ login, loginModal }: LoginProps) => {
             onClick={kakaoLoginHandler}
           />
           <GoogleLogin
-            clientId={process.env.NEXT_APP_GOOGLE_CLIENT_ID as string}
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
             render={(renderProps) => (
               <img
                 src="img/btn-login-google.png"

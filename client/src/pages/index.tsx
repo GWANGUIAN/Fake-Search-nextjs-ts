@@ -293,7 +293,7 @@ const Home: NextPage = () => {
 
   const hadleLogout = () => {
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/users/logout`, '', {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/users/logout`, '', {
         withCredentials: true,
       })
       .then(() => {
