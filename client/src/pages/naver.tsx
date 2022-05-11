@@ -1,24 +1,18 @@
 import axios from 'axios';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect } from 'react';
+import Router from 'next/router';
+import { useEffect } from 'react';
 
 import Loading from '../components/Loading/Loading';
 import { logger } from '../utils/logger';
 
 export default function NaverLogin() {
-  const location = useRouter();
-
-  const getNaverToken = useCallback(async () => {
-    if (!location.query.hash) {
-      return;
-    }
-
-    const hash = location.query.hash as string;
+  const getNaverToken = async () => {
+    const hash = Router.asPath.split('#')[1];
     const token = hash.split('=')[1].split('&')[0];
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_SERVER_API}/users/naver-login`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/users/naver-login`,
         {
           token,
         },
@@ -30,14 +24,14 @@ export default function NaverLogin() {
     } catch (error) {
       logger.error(error);
     }
-  }, [location]);
+  };
 
   useEffect(() => {
     void getNaverToken();
-  }, [getNaverToken]);
+  }, []);
 
   return (
-    <div className="naverlogin-container">
+    <div>
       <Loading />
     </div>
   );

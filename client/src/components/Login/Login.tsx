@@ -151,6 +151,7 @@ const Login = ({ login, loginModal }: LoginProps) => {
 
   const kakaoLoginHandler = () => {
     const { Kakao } = window;
+    Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
     Kakao.Auth.login({
       scope: '',
       success: () => {
