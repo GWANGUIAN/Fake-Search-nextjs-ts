@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import Loading from '../components/Loading/Loading';
 import { logger } from '../utils/logger';
 
-export default function NaverLogin() {
+const NaverLogin = () => {
   const getNaverToken = async () => {
     const hash = Router.asPath.split('#')[1];
     const token = hash.split('=')[1].split('&')[0];
@@ -35,4 +35,6 @@ export default function NaverLogin() {
       <Loading />
     </div>
   );
-}
+};
+
+export default NaverLogin;
