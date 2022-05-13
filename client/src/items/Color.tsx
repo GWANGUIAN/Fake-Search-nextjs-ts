@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import axios from 'axios';
 import type { ColorResult } from 'react-color';
 import { ChromePicker } from 'react-color';
@@ -5,7 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { login } from '../redux/actions';
 import type { RootState } from '../redux/reducers';
+import { displayNone } from '../styles/global';
 import { logger } from '../utils/logger';
+
+const colorContainer = css`
+  display: inline-block;
+`;
 
 interface Props {
   colorRef: React.LegacyRef<HTMLDivElement>;
@@ -34,7 +40,7 @@ export default function Color({ colorRef, isColorOpen }: Props) {
   };
 
   return (
-    <div ref={colorRef} className={isColorOpen ? 'color-container' : 'hidden'}>
+    <div ref={colorRef} css={isColorOpen ? colorContainer : displayNone}>
       <ChromePicker color={themeColor} onChange={hadleThemeColor} />
     </div>
   );
