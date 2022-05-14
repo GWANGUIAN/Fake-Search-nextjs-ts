@@ -11,7 +11,7 @@
       "project": ["**/tsconfig.json"],
       "sourceType": "module"
     },
-    "ignorePatterns": ["redux"],
+    "ignorePatterns": [],
     "extends": [
       "next/core-web-vitals",
       "plugin:import/errors",

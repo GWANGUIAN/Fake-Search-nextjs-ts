@@ -1,37 +1,28 @@
-import { AnyAction } from 'redux';
-import { CHANGEMUSIC, RESETMUSIC } from '../actions/index';
+import type { AnyAction } from 'redux';
 
-const musicReducer = (
-  state = {
-    type: 'music',
-    view: 0,
-    album: '',
-    info: '',
-    date: '',
-    order: 4,
-    title: '',
-    artist: ''
-  },
-  action: AnyAction
-) => {
+import type { MusicState } from '../../types/state';
+import { CHANGEMUSIC, RESETMUSIC } from '../actions';
+
+const initialState: MusicState = {
+  type: 'music',
+  view: false,
+  album: '',
+  info: '',
+  date: '',
+  order: 4,
+  title: '',
+  artist: '',
+};
+
+const musicReducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case CHANGEMUSIC:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     case RESETMUSIC:
-      return {
-        ...state,
-        type: 'music',
-        view: 0,
-        album: '',
-        info: '',
-        date: '',
-        order: '4',
-        title: '',
-        artist: ''
-      };
+      return initialState;
 
     default:
       return state;

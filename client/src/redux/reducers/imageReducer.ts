@@ -1,16 +1,16 @@
 import type { AnyAction } from 'redux';
 
+import type { ImageState } from '../../types/state';
 import { CHANGEIMAGE, RESETIMAGE } from '../actions';
 
-const imageReducer = (
-  state = {
-    type: 'image',
-    view: 0,
-    order: 3,
-    content: { img1: '', img2: '', img3: '', img4: '' },
-  },
-  action: AnyAction,
-) => {
+const initialState: ImageState = {
+  type: 'image',
+  view: false,
+  order: 3,
+  content: { img1: '', img2: '', img3: '', img4: '' },
+};
+
+const imageReducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case CHANGEIMAGE:
       return {
@@ -18,13 +18,7 @@ const imageReducer = (
         ...action.payload,
       };
     case RESETIMAGE:
-      return {
-        ...state,
-        type: 'image',
-        view: 0,
-        order: 3,
-        content: { img1: '', img2: '', img3: '', img4: '' },
-      };
+      return initialState;
 
     default:
       return state;

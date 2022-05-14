@@ -1,7 +1,11 @@
-import { compose, createStore, applyMiddleware, Store, AnyAction } from "redux";
-import rootReducer, { RootState } from "./reducers";
-import thunk from "redux-thunk";
-import { createWrapper, MakeStore } from "next-redux-wrapper";
+import type { MakeStore } from 'next-redux-wrapper';
+import { createWrapper } from 'next-redux-wrapper';
+import type { AnyAction, Store } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
+import thunk from 'redux-thunk';
+
+import type { RootState } from './reducers';
+import rootReducer from './reducers';
 
 declare global {
   interface Window {
@@ -12,7 +16,7 @@ declare global {
 const middleware = [thunk];
 
 const composeEnhancers =
-  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : compose;
 

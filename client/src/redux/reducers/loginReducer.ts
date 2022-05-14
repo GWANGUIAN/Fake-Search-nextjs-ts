@@ -1,17 +1,17 @@
 import type { AnyAction } from 'redux';
 
+import type { LoginState } from '../../types/state';
 import { LOGIN, LOGOUT } from '../actions';
 
-const loginReducer = (
-  state = {
-    isLogin: false,
-    oauth: '',
-    id: 'default',
-    siteName: 'FAKESEARCH',
-    themeColor: '#2260FF',
-  },
-  action: AnyAction,
-) => {
+const initialState: LoginState = {
+  isLogin: false,
+  oauth: '',
+  id: 'default',
+  siteName: 'FAKESEARCH',
+  themeColor: '#2260FF',
+};
+
+const loginReducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case LOGIN:
       return {
@@ -19,14 +19,7 @@ const loginReducer = (
         ...action.payload,
       };
     case LOGOUT:
-      return {
-        ...state,
-        isLogin: false,
-        oauth: '',
-        id: 'default',
-        siteName: 'FAKESEARCH',
-        themeColor: '#2260FF',
-      };
+      return initialState;
 
     default:
       return state;

@@ -1,15 +1,16 @@
-import { AnyAction } from "redux";
-import { CHANGENEWS, RESETNEWS } from "../actions/index";
+import type { AnyAction } from 'redux';
 
-const newsReducer = (
-  state = {
-    type: "news",
-    view: 0,
-    order: 2,
-    content: [{ title: "", content: "", datetime: "", reporter: "", img: "" }],
-  },
-  action: AnyAction
-) => {
+import type { NewsState } from '../../types/state';
+import { CHANGENEWS, RESETNEWS } from '../actions';
+
+const initialState: NewsState = {
+  type: 'news',
+  view: false,
+  order: 2,
+  content: [{ title: '', content: '', datetime: '', reporter: '', img: '' }],
+};
+
+const newsReducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case CHANGENEWS:
       return {
@@ -17,15 +18,7 @@ const newsReducer = (
         ...action.payload,
       };
     case RESETNEWS:
-      return {
-        ...state,
-        type: "news",
-        view: 0,
-        order: 2,
-        content: [
-          { title: "", content: "", datetime: "", reporter: "", img: "" },
-        ],
-      };
+      return initialState;
 
     default:
       return state;
