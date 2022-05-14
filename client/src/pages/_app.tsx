@@ -10,26 +10,20 @@ import Head from '../items/Head';
 import { login } from '../redux/actions';
 import { wrapper } from '../redux/store';
 import { globalStyles } from '../styles/reset';
+import type { LoginState } from '../types/state';
 import { logger } from '../utils/logger';
-
-interface UserData {
-  oauth: string;
-  id: string;
-  siteName: string;
-  themeColor: string;
-}
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const dispatch = useDispatch();
 
   const isAuthenticated = useCallback(async () => {
     await axios
-      .get(`${process.env.NEXT_PUBLIC_SERVER_API}/users/auth`, {
+      .get<LoginState>(`${process.env.NEXT_PUBLIC_SERVER_API}/users/auth`, {
         withCredentials: true,
       })
       .then((res) => {
         if (res.data) {
-          dispatch(login(res.data as UserData));
+          dispatch(login(res.data));
         }
       })
       .catch((error) => {
