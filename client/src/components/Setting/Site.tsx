@@ -131,7 +131,7 @@ const Site = () => {
 
   const changeSiteName = () => {
     if (isChecked && siteNameForm !== '') {
-      void axios
+      axios
         .patch(
           `${process.env.NEXT_PUBLIC_SERVER_API}/users/site-name`,
           {
@@ -156,6 +156,9 @@ const Site = () => {
             .catch((error) => {
               logger.error(error);
             });
+        })
+        .catch((error) => {
+          logger.error(error);
         });
     }
   };

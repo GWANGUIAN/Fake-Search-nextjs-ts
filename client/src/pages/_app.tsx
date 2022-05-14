@@ -16,8 +16,8 @@ import { logger } from '../utils/logger';
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const dispatch = useDispatch();
 
-  const isAuthenticated = useCallback(async () => {
-    await axios
+  const isAuthenticated = useCallback(() => {
+    axios
       .get<LoginState>(`${process.env.NEXT_PUBLIC_SERVER_API}/users/auth`, {
         withCredentials: true,
       })

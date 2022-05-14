@@ -143,12 +143,15 @@ const AutoComplete = ({ themeColor }: Props) => {
   const [isChecked, setIsChecked] = useState(true);
 
   const getAutoComplete = useCallback(() => {
-    void axios
+    axios
       .get<AutoCompleteConfig[]>(`${process.env.NEXT_PUBLIC_SERVER_API}/auto`, {
         withCredentials: true,
       })
       .then((res) => {
         setAutoCompleteList(res.data);
+      })
+      .catch((error) => {
+        logger.error(error);
       });
   }, [setAutoCompleteList]);
 
@@ -166,31 +169,35 @@ const AutoComplete = ({ themeColor }: Props) => {
   };
 
   const addAutoComplete = async () => {
-    if (autoCompleteWord !== '' && isChecked) {
-      const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_API}/auto`,
-        { word: autoCompleteWord },
-        {
-          withCredentials: true,
-        },
-      );
+    try {
+      if (autoCompleteWord !== '' && isChecked) {
+        const res = await axios.post(
+          `${process.env.REACT_APP_SERVER_API}/auto`,
+          { word: autoCompleteWord },
+          {
+            withCredentials: true,
+          },
+        );
 
-      if (res.status === 200) {
-        setAlertText('이미 등록된 단어입니다.');
-        setIsChecked(false);
-      } else if (res.status === 201) {
-        setAutoCompleteWord('');
-        await axios
-          .get<AutoCompleteConfig[]>(
-            `${process.env.REACT_APP_SERVER_API}/auto`,
-            {
-              withCredentials: true,
-            },
-          )
-          .then((response) => {
-            setAutoCompleteList(response.data);
-          });
+        if (res.status === 200) {
+          setAlertText('이미 등록된 단어입니다.');
+          setIsChecked(false);
+        } else if (res.status === 201) {
+          setAutoCompleteWord('');
+          await axios
+            .get<AutoCompleteConfig[]>(
+              `${process.env.REACT_APP_SERVER_API}/auto`,
+              {
+                withCredentials: true,
+              },
+            )
+            .then((response) => {
+              setAutoCompleteList(response.data);
+            });
+        }
       }
+    } catch (error) {
+      logger.error(error);
     }
   };
 
