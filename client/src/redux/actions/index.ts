@@ -33,14 +33,14 @@ export const logout = () => (dispatch: any) => {
 
 export const changeProfile =
   (state: {
-    type: 'profile';
-    order: number;
-    view: number;
-    job: string;
-    profileImg: string;
-    name: string;
-    info: Array<{ title: string; content: string }>;
-    subinfo: Array<{
+    type?: 'profile';
+    order?: number;
+    view?: number;
+    job?: string;
+    profileImg?: string;
+    name?: string;
+    info?: Array<{ title: string; content: string }>;
+    subinfo?: Array<{
       title: string;
       content: Array<{ image: string; title: string }>;
     }>;
