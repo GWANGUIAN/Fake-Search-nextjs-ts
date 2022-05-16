@@ -132,3 +132,51 @@ export const flexNum = (num: number) => css`
 export const hidden = css`
   visibility: hidden;
 `;
+
+export const sectionTitle = css`
+  flex: 1.5;
+  font-size: 1.2em;
+  color: rgb(187, 187, 187);
+  font-weight: 500;
+`;
+
+export const sectionOpenBtn = css`
+  flex: 0.1;
+  min-width: 50px;
+  color: rgb(83, 83, 83);
+  cursor: pointer;
+  margin-left: auto;
+  font-weight: 700;
+`;
+
+export const sectionDeleteBtn = css`
+  flex: 0.1;
+  min-width: 50px;
+  color: rgb(46, 46, 46);
+  cursor: pointer;
+  margin-left: auto;
+`;
+
+export const sectionInput = css`
+  &[type='text'] {
+    border: none;
+    &:hover {
+      border: 1px solid rgb(165, 165, 165);
+      border-radius: 2px;
+    }
+  }
+`;
+
+export const sectionTextarea = css`
+  resize: none;
+  border: none;
+  &:hover {
+    border: 1px solid rgb(165, 165, 165);
+    border-radius: 2px;
+  }
+  &:focus {
+    outline: inherit;
+    border: 1px solid rgb(165, 165, 165);
+    border-radius: 2px;
+  }
+`;
