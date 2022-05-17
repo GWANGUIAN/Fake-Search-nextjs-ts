@@ -70,8 +70,12 @@ export const leftterSpacing = (spaceSize: number) => css`
   letter-spacing: ${spaceSize}px;
 `;
 
-export const elementWidth = (width: number) => css`
-  width: ${width}%;
+export const widthPx = (width: number) => css`
+  width: ${width}px;
+`;
+
+export const heightPx = (height: number) => css`
+  height: ${height}px;
 `;
 
 export const fontColor = (color: string) => css`
@@ -94,10 +98,6 @@ export const flexColumn = css`
 export const flexCenter = css`
   ${flex}
   justify-content: center;
-`;
-
-export const elementWidthPX = (width: number) => css`
-  width: ${width}px;
 `;
 
 export const alignItems = (posotion: string) => css`
