@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import {
   faMinusCircle,
   faTimesCircle,
@@ -9,9 +10,140 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { changeNews, resetNews } from '../redux/actions';
 import type { RootState } from '../redux/reducers';
+import {
+  alignItems,
+  flex,
+  flexColumn,
+  flexNum,
+  sectionDeleteBtn,
+  sectionOpenBtn,
+  sectionTitle,
+} from '../styles/global';
 import type { NewsContentConfiguration } from '../types/state';
 import { logger } from '../utils/logger';
 import ImageUpload from './ImageUpload';
+
+const newsSetContainer = css`
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 2px solid rgb(212, 212, 212);
+  box-shadow: 0px 2px 5px rgb(187, 187, 187);
+  border-radius: 10px;
+  width: 100%;
+  margin: 5px auto;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  margin: 5px 0px;
+  overflow-x: hidden;
+`;
+
+const newsBox = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid rgb(212, 212, 212);
+  padding: 10px 0px;
+  margin: 10px 0px;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    height: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: gray;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: rgb(214, 214, 214);
+    border-radius: 10px;
+  }
+`;
+
+const reporterInput = css`
+  width: 100px;
+  font-size: 1.02em;
+`;
+
+const dateInput = css`
+  width: 120px;
+  font-size: 1.02em;
+`;
+
+const titleTextarea = css`
+  width: 100%;
+  margin: 7px 0px;
+  font-size: 1.1em;
+  color: rgb(38, 57, 230);
+  font-weight: 500;
+  &::placeholder {
+    font-size: 1.1em;
+    color: rgb(38, 57, 230);
+  }
+`;
+
+const contentTextarea = css`
+  width: 100%;
+  height: 80px;
+`;
+
+const newsImage = css`
+  flex: 1.3;
+  margin-left: 10px;
+  text-align: center;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const newsImageLine = css`
+  height: 140px;
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+`;
+
+const deleteImageBtn = css`
+  color: rgb(78, 78, 78);
+  cursor: pointer;
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 1.2em;
+  background-color: white;
+  border-radius: 50%;
+`;
+
+const newsDeleteBtn = css`
+  cursor: pointer;
+  color: rgb(78, 78, 78);
+  margin: 0 auto;
+`;
+
+const newsAddBtn = css`
+  border: none;
+  outline: inherit;
+  cursor: pointer;
+  height: 35px;
+  width: 100px;
+  border-radius: 5px;
+  color: rgb(85, 85, 85);
+  font-size: 1.05em;
+  font-weight: 500;
+  margin: 0 auto;
+  background-color: inherit;
+  &:hover {
+    background-color: rgb(245, 245, 245);
+  }
+`;
 
 interface PropsOfEl {
   newsContentConfiguration: NewsContentConfiguration;
@@ -66,13 +198,13 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
   };
 
   return (
-    <div css="box-news">
-      <div css="inline-box-news">
-        <div css="box-news-content">
-          <div css="news-line-first">
+    <div css={newsBox}>
+      <div css={[flex, alignItems('center')]}>
+        <div css={[flexColumn, flexNum(5)]}>
+          <div css={flex}>
             <input
               type="text"
-              css="reporter"
+              css={reporterInput}
               placeholder="신문사"
               name="reporter"
               value={newsContentConfiguration.reporter}
@@ -80,7 +212,7 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
             />
             <input
               type="text"
-              css="news-date"
+              css={dateInput}
               placeholder="기사 날짜"
               name="datetime"
               value={newsContentConfiguration.datetime}
@@ -89,7 +221,7 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
           </div>
           <input
             type="text"
-            css="title-news"
+            css={titleTextarea}
             value={newsContentConfiguration.title}
             placeholder="뉴스 제목"
             name="title"
@@ -97,14 +229,14 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
           />
           <textarea
             value={newsContentConfiguration.content}
-            css="content-news"
+            css={contentTextarea}
             placeholder="뉴스 내용"
             name="content"
             onChange={hadleInput}
           />
         </div>
-        <div css="img-news">
-          <div css="img-news-line">
+        <div css={newsImage}>
+          <div css={newsImageLine}>
             <ImageUpload
               imageData={newsContentConfiguration.img}
               onDrop={onDrop}
@@ -113,7 +245,7 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
 
           {newsContentConfiguration.img !== '' && (
             <FontAwesomeIcon
-              css="btn-delete-img"
+              css={deleteImageBtn}
               icon={faTimesCircle}
               onClick={deleteImg}
             />
@@ -122,7 +254,7 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
       </div>
       {id !== 0 && (
         <FontAwesomeIcon
-          css="btn-delete-news"
+          css={newsDeleteBtn}
           icon={faMinusCircle}
           onClick={deleteNews}
         />
@@ -147,11 +279,11 @@ const NewsSet = ({ isOpen, setIsOpen }: Props) => {
   };
 
   return (
-    <div css="newsset-container">
-      <div css="box-section-title">
-        <div css="section-title">뉴스</div>
+    <div css={newsSetContainer}>
+      <div css={[flex, alignItems('center')]}>
+        <div css={sectionTitle}>뉴스</div>
         <div
-          css="btn-open"
+          css={sectionOpenBtn}
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -159,7 +291,7 @@ const NewsSet = ({ isOpen, setIsOpen }: Props) => {
           {isOpen ? '닫기' : '열기'}
         </div>
         <div
-          css="btn-delete-section"
+          css={sectionDeleteBtn}
           onClick={() => {
             dispatch(resetNews());
           }}
@@ -181,7 +313,7 @@ const NewsSet = ({ isOpen, setIsOpen }: Props) => {
               />
             ),
           )}
-          <button id="btn-add-news" onClick={addNews}>
+          <button css={newsAddBtn} onClick={addNews}>
             + 뉴스 추가
           </button>
         </>
