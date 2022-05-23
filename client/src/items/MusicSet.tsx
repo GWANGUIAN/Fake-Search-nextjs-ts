@@ -62,6 +62,11 @@ const albumImage = css`
   justify-content: center;
   align-items: center;
   position: relative;
+  @media (max-width: 753px) {
+    p {
+      display: none;
+    }
+  }
 `;
 
 const albumDeleteBtn = css`

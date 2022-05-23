@@ -109,6 +109,11 @@ const newsImageLine = css`
   justify-content: center;
   align-items: center;
   margin-bottom: 5px;
+  @media (max-width: 753px) {
+    p {
+      display: none;
+    }
+  }
 `;
 
 const deleteImageBtn = css`

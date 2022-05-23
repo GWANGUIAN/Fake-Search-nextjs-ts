@@ -70,6 +70,11 @@ const imageElementLine = css`
   margin-bottom: 5px;
   height: 150px;
   width: 98%;
+  @media (max-width: 753px) {
+    p {
+      display: none;
+    }
+  }
 `;
 
 const deleteBtn = css`
