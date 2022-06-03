@@ -1,4 +1,8 @@
-//수정중
+/* eslint-disable sonarjs/no-identical-functions */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/await-thenable */
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable sonarjs/cognitive-complexity */
 import {
   faCheckCircle,
   faGripVertical,
@@ -8,6 +12,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
+import type { DropResult } from 'react-beautiful-dnd';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
@@ -28,19 +33,320 @@ import {
   resetProfile,
 } from '../../redux/actions';
 import type { RootState } from '../../redux/reducers';
+import type {
+  SearchDataConfig,
+  SearchWordList,
+  SearchWordOption,
+} from '../../types';
 import checkAutoComplete from '../../utils/checkAutoComplete';
+import { logger } from '../../utils/logger';
 
-const SearchData = ({ themeColor }) => {
-  const { view: profileView, order: profileOrder } = useSelector(
+interface ConfirmProps {
+  setIsConfirmDelete: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteSearchData: () => void;
+  themeColor: string;
+}
+
+const ConfirmDelete = ({
+  setIsConfirmDelete,
+  deleteSearchData,
+  themeColor,
+}: ConfirmProps) => (
+  <div className="confirmdelete-container">
+    <FontAwesomeIcon icon={faTrash} className="icon-delete"></FontAwesomeIcon>
+    <div className="text-delete">해당 검색어를 삭제하시겠습니까?</div>
+    <div className="box-btn-delete">
+      <button
+        className="btn-delete-cancel"
+        onClick={() => {
+          setIsConfirmDelete(false);
+        }}
+      >
+        취소
+      </button>
+      <button
+        className="btn-delete-accept"
+        style={{
+          backgroundColor: themeColor,
+        }}
+        onClick={deleteSearchData}
+      >
+        확인
+      </button>
+    </div>
+  </div>
+);
+
+interface ModalDeleteProps {
+  isModalDelete: boolean;
+}
+
+const ModalDelete = ({ isModalDelete }: ModalDeleteProps) => (
+  <div
+    className={
+      isModalDelete ? 'modaldelete-container' : 'modaldelete-container hidden'
+    }
+  >
+    <FontAwesomeIcon
+      icon={faCheckCircle}
+      className="icon-delete-complete"
+    ></FontAwesomeIcon>
+    <div className="text-delete-complete">삭제되었습니다.</div>
+  </div>
+);
+
+interface ModalSaveProps {
+  isModalSave: boolean;
+}
+
+const ModalSave = ({ isModalSave }: ModalSaveProps) => (
+  <div
+    className={
+      isModalSave ? 'modalsave-container' : 'modalsave-container hidden'
+    }
+  >
+    <FontAwesomeIcon
+      icon={faCheckCircle}
+      className="icon-save"
+    ></FontAwesomeIcon>
+    <div className="text-save">저장 완료</div>
+  </div>
+);
+
+interface AddSearchWordProps {
+  themeColor: string;
+  setIsModalAdd: React.Dispatch<React.SetStateAction<boolean>>;
+  getSeachDataList: () => Promise<void>;
+}
+
+const AddSeachWord = ({
+  themeColor,
+  setIsModalAdd,
+  getSeachDataList,
+}: AddSearchWordProps) => {
+  const [searchWord, setSearchWord] = useState('');
+  const [isChecked, setIsChecked] = useState(true);
+  const [alertText, setAlertText] = useState(
+    '검색어는 최대 16자까지 가능합니다. (자음,모음 불가)',
+  );
+
+  const addSearhData = async () => {
+    if (searchWord !== '' && isChecked) {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_API}/search`,
+        { word: searchWord },
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (res.status === 200) {
+        await setAlertText('이미 등록된 단어입니다.');
+        await setIsChecked(false);
+      } else if (res.status === 201) {
+        await setSearchWord('');
+        await axios
+          .get(`${process.env.REACT_APP_SERVER_API}/auto`, {
+            withCredentials: true,
+          })
+          .then(() => {
+            void getSeachDataList();
+            setIsModalAdd(false);
+          });
+      }
+    }
+  };
+
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWord(e.target.value);
+    setAlertText(
+      '자동완성 검색어는 최대 16자까지 가능합니다. (자음,모음 불가)',
+    );
+
+    if (e.target.value === '') {
+      setIsChecked(true);
+    } else {
+      setIsChecked(checkAutoComplete(e.target.value));
+    }
+  };
+
+  return (
+    <div className="bg-modal">
+      <div className="add-container">
+        <div
+          className="btn-close"
+          onClick={() => {
+            setIsModalAdd(false);
+          }}
+        >
+          <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
+        </div>
+        <div className="box-input-add">
+          <input
+            type="text"
+            id="input-new-word"
+            value={searchWord}
+            onChange={handleCheck}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                void addSearhData();
+              }
+            }}
+          />
+          <div id={isChecked ? 'message-hidden' : 'message'}>{alertText}</div>
+          <button
+            id={
+              isChecked && searchWord !== ''
+                ? 'btn-add-seachword'
+                : 'btn-add-seachword-none'
+            }
+            style={{
+              backgroundColor:
+                isChecked && searchWord !== ''
+                  ? themeColor
+                  : 'rgb(190, 190, 190)',
+            }}
+            onClick={void addSearhData}
+          >
+            추가
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface ModalSectionProps {
+  themeColor: string;
+  boxModal: React.LegacyRef<HTMLDivElement>;
+  isOpenModalSection: boolean;
+}
+
+const ModalSection = ({
+  themeColor,
+  boxModal,
+  isOpenModalSection,
+}: ModalSectionProps) => {
+  const dispatch = useDispatch();
+  const { view: isProfileView } = useSelector(
     (state: RootState) => state.profileReducer,
   );
-  const { view: newsView, order: newsOrder } = useSelector(
+  const { view: isNewsView } = useSelector(
     (state: RootState) => state.newsReducer,
   );
-  const { view: imageView, order: imageOrder } = useSelector(
+  const { view: isImageView } = useSelector(
     (state: RootState) => state.imageReducer,
   );
-  const { view: musicView, order: musicOrder } = useSelector(
+  const { view: isMusicView } = useSelector(
+    (state: RootState) => state.musicReducer,
+  );
+
+  const hadleView = (e: React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.id) {
+      case 'profile': {
+        dispatch(changeProfile({ view: e.target.checked }));
+
+        break;
+      }
+
+      case 'news': {
+        dispatch(changeNews({ view: e.target.checked }));
+
+        break;
+      }
+
+      case 'image': {
+        dispatch(changeImage({ view: e.target.checked }));
+
+        break;
+      }
+
+      case 'music': {
+        dispatch(changeMusic({ view: e.target.checked }));
+
+        break;
+      }
+      // No default
+    }
+  };
+
+  return (
+    <div
+      ref={boxModal}
+      className={
+        isOpenModalSection
+          ? 'modalsection-container'
+          : 'modalsection-container hidden'
+      }
+      style={{ border: `1px solid ${themeColor}` }}
+    >
+      <div>
+        <input
+          type="checkbox"
+          id="profile"
+          className="profile-check-box"
+          checked={isProfileView}
+          onChange={hadleView}
+        />
+        <label htmlFor="profile" className="text-profile">
+          프로필
+        </label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="news"
+          className="news-check-box"
+          checked={isNewsView}
+          onChange={hadleView}
+        />
+        <label htmlFor="news" className="text-news">
+          뉴스
+        </label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="image"
+          className="image-check-box"
+          checked={isImageView}
+          onChange={hadleView}
+        />
+        <label htmlFor="image" className="text-image">
+          이미지
+        </label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="music"
+          className="music-check-box"
+          checked={isMusicView}
+          onChange={hadleView}
+        />
+        <label htmlFor="music" className="text-music">
+          음악
+        </label>
+      </div>
+    </div>
+  );
+};
+
+interface Props {
+  themeColor: string;
+}
+
+const SearchData = ({ themeColor }: Props) => {
+  const { view: isProfileView, order: profileOrder } = useSelector(
+    (state: RootState) => state.profileReducer,
+  );
+  const { view: isNewsView, order: newsOrder } = useSelector(
+    (state: RootState) => state.newsReducer,
+  );
+  const { view: isImageView, order: imageOrder } = useSelector(
+    (state: RootState) => state.imageReducer,
+  );
+  const { view: isMusicView, order: musicOrder } = useSelector(
     (state: RootState) => state.musicReducer,
   );
 
@@ -52,27 +358,33 @@ const SearchData = ({ themeColor }) => {
   const musicReducer = useSelector((state: RootState) => state.musicReducer);
 
   const dispatch = useDispatch();
-  const boxModal = useRef();
-  const btnSection = useRef();
-  const [searchWordList, setSearchWordList] = useState([]);
-  const [selected, setSelected] = useState('');
-  const [modalSection, setModalSection] = useState(false);
-  const [modalAdd, setModalAdd] = useState(false);
-  const [modalSave, setModalSave] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [modalDelete, setModalDelete] = useState(false);
-  const [openProfile, setOpenProfile] = useState(false);
-  const [openNews, setOpenNews] = useState(false);
-  const [openImage, setOpenImage] = useState(false);
-  const [openMusic, setOpenMusic] = useState(false);
-  const [resetDrag, setResetDrag] = useState(false);
+  const boxModal = useRef<HTMLDivElement>(null);
+  const btnSection = useRef<HTMLSpanElement>(null);
+  const [searchWordList, setSearchWordList] = useState<SearchWordOption[]>([]);
+  const [selected, setSelected] = useState<SearchWordOption>({
+    value: '',
+    label: '',
+  });
+  const [isOpenModalSection, setIsOpenModalSection] = useState(false);
+  const [isModalAdd, setIsModalAdd] = useState(false);
+  const [isModalSave, setIsModalSave] = useState(false);
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+  const [isModalDelete, setIsModalDelete] = useState(false);
+  const [isOpenProfile, setIsOpenProfile] = useState(false);
+  const [isOpenNews, setIsOpenNews] = useState(false);
+  const [isOpenImage, setIsOpenImage] = useState(false);
+  const [isOpenMusic, setIsOpenMusic] = useState(false);
+  const [isResetDrag, setIsResetDrag] = useState(false);
 
-  const [windowPreview, setWindowPreview] = useState(false);
+  const [isWindowPreview, setIsWindowPreview] = useState(false);
 
   const getSeachDataList = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_SERVER_API}/search`, {
-      withCredentials: true,
-    });
+    const res = await axios.get<SearchWordList[]>(
+      `${process.env.REACT_APP_SERVER_API}/search`,
+      {
+        withCredentials: true,
+      },
+    );
     setSearchWordList(
       res.data.map((el) => ({
         value: el.word,
@@ -81,14 +393,14 @@ const SearchData = ({ themeColor }) => {
     );
   };
 
-  const selectSearchData = async (e) => {
+  const selectSearchData = async (e: SearchWordOption) => {
     setSelected(e);
-    setResetDrag(true);
-    setOpenProfile(false);
-    setOpenNews(false);
-    setOpenImage(false);
-    setOpenMusic(false);
-    const res = await axios.get(
+    setIsResetDrag(true);
+    setIsOpenProfile(false);
+    setIsOpenNews(false);
+    setIsOpenImage(false);
+    setIsOpenMusic(false);
+    const res = await axios.get<SearchDataConfig>(
       `${process.env.REACT_APP_SERVER_API}/search/word`,
       {
         params: { word: e.value },
@@ -99,19 +411,23 @@ const SearchData = ({ themeColor }) => {
     dispatch(changeNews(res.data.news));
     dispatch(changeImage(res.data.image));
     dispatch(changeMusic(res.data.music));
-    setResetDrag(false);
+    setIsResetDrag(false);
   };
 
-  const handleClickOutside = ({ target }) => {
+  const handleClickOutside = ({ target }: MouseEvent) => {
+    if (boxModal.current === null || btnSection.current === null) {
+      return;
+    }
+
     if (
-      !boxModal.current.contains(target) &&
-      !btnSection.current.contains(target)
+      !boxModal.current.contains(target as Node) &&
+      !btnSection.current.contains(target as Node)
     ) {
-      setModalSection(false);
+      setIsOpenModalSection(false);
     }
   };
 
-  const handleDropChange = (result) => {
+  const handleDropChange = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
@@ -133,36 +449,42 @@ const SearchData = ({ themeColor }) => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    for (const [index, el] of items.entries()) {
-      items[index].order = index + 1;
+    for (const [i, item] of items.entries()) {
+      item.order = i + 1;
 
-      switch (el.type) {
+      switch (item.type) {
         case 'profile': {
-          dispatch(changeProfile({ order: items[index].order }));
+          dispatch(changeProfile({ order: item.order }));
 
           break;
         }
 
         case 'news': {
-          dispatch(changeNews({ order: items[index].order }));
+          dispatch(changeNews({ order: item.order }));
 
           break;
         }
 
         case 'image': {
-          dispatch(changeImage({ order: items[index].order }));
+          dispatch(changeImage({ order: item.order }));
 
           break;
         }
 
         case 'music': {
-          dispatch(changeMusic({ order: items[index].order }));
+          dispatch(changeMusic({ order: item.order }));
 
           break;
         }
-        // No default
       }
     }
+  };
+
+  const alertSave = () => {
+    setIsModalSave(true);
+    setTimeout(() => {
+      setIsModalSave(false);
+    }, 1000);
   };
 
   const submitSearchData = () => {
@@ -180,13 +502,16 @@ const SearchData = ({ themeColor }) => {
       )
       .then(() => {
         alertSave();
+      })
+      .catch((error) => {
+        logger.error(error);
       });
   };
 
-  const alertSave = () => {
-    setModalSave(true);
+  const alertDelete = () => {
+    setIsModalDelete(true);
     setTimeout(() => {
-      setModalSave(false);
+      setIsModalDelete(false);
     }, 1000);
   };
 
@@ -201,18 +526,21 @@ const SearchData = ({ themeColor }) => {
         dispatch(resetNews());
         dispatch(resetImage());
         dispatch(resetMusic());
-        setConfirmDelete(false);
-        setSelected('');
-        getSeachDataList();
+        setIsConfirmDelete(false);
+        setSelected({ value: '', label: '' });
+        void getSeachDataList();
         alertDelete();
+      })
+      .catch((error) => {
+        logger.error(error);
       });
   };
 
-  const alertDelete = () => {
-    setModalDelete(true);
-    setTimeout(() => {
-      setModalDelete(false);
-    }, 1000);
+  const openPreview = async () => {
+    if (selected.value !== '') {
+      await setIsWindowPreview(false);
+      await setIsWindowPreview(true);
+    }
   };
 
   useEffect(() => {
@@ -228,7 +556,7 @@ const SearchData = ({ themeColor }) => {
     dispatch(resetNews());
     dispatch(resetImage());
     dispatch(resetMusic());
-    getSeachDataList();
+    void getSeachDataList();
   }, [dispatch]);
 
   return (
@@ -239,14 +567,14 @@ const SearchData = ({ themeColor }) => {
           <Select
             id="input-seachWord"
             options={searchWordList}
-            onChange={selectSearchData}
+            onChange={void selectSearchData}
             value={selected}
           />
           <button
             id="btn-save"
             style={{
               backgroundColor:
-                selected !== '' ? themeColor : 'rgb(190, 190, 190)',
+                selected.value !== '' ? themeColor : 'rgb(190, 190, 190)',
             }}
             onClick={submitSearchData}
           >
@@ -255,21 +583,12 @@ const SearchData = ({ themeColor }) => {
         </div>
         <div className="box-subcontrol2">
           <div id="btn-preview">
-            <span
-              onClick={async () => {
-                if (selected !== '') {
-                  await setWindowPreview(false);
-                  await setWindowPreview(true);
-                }
-              }}
-            >
-              미리보기
-            </span>
+            <span onClick={void openPreview}>미리보기</span>
           </div>
           <div id="btn-add-word">
             <span
               onClick={() => {
-                setModalAdd(!modalAdd);
+                setIsModalAdd(!isModalAdd);
               }}
             >
               + 검색어 추가
@@ -278,8 +597,8 @@ const SearchData = ({ themeColor }) => {
           <div
             id="btn-delete-word"
             onClick={() => {
-              if (selected !== '') {
-                setConfirmDelete(true);
+              if (selected.value !== '') {
+                setIsConfirmDelete(true);
               }
             }}
           >
@@ -292,8 +611,8 @@ const SearchData = ({ themeColor }) => {
           <span
             ref={btnSection}
             onClick={() => {
-              if (selected !== '') {
-                setModalSection(!modalSection);
+              if (selected.value !== '') {
+                setIsOpenModalSection(!isOpenModalSection);
               }
             }}
           >
@@ -302,25 +621,25 @@ const SearchData = ({ themeColor }) => {
           <ModalSection
             themeColor={themeColor}
             boxModal={boxModal}
-            modalSection={modalSection}
+            isOpenModalSection={isOpenModalSection}
           />
         </div>
         <div className="setting-section">
-          {selected === '' && (
+          {selected.value === '' && (
             <div className="box-no-data">검색어를 선택하세요.</div>
           )}
-          {!profileView &&
-            !newsView &&
-            !imageView &&
-            !musicView &&
-            selected !== '' && (
+          {!isProfileView &&
+            !isNewsView &&
+            !isImageView &&
+            !isMusicView &&
+            selected.value !== '' && (
               <div className="box-no-data">
                 설정된 데이터가 없습니다.
                 <br />
                 섹션을 추가하세요.
               </div>
             )}
-          {!resetDrag && (
+          {!isResetDrag && (
             <DragDropContext onDragEnd={handleDropChange}>
               <Droppable droppableId="sections">
                 {(provided) => (
@@ -332,22 +651,22 @@ const SearchData = ({ themeColor }) => {
                     {[
                       {
                         type: 'profile',
-                        view: profileView,
+                        view: isProfileView,
                         order: String(profileOrder),
                       },
                       {
                         type: 'news',
-                        view: newsView,
+                        view: isNewsView,
                         order: String(newsOrder),
                       },
                       {
                         type: 'image',
-                        view: imageView,
+                        view: isImageView,
                         order: String(imageOrder),
                       },
                       {
                         type: 'music',
-                        view: musicView,
+                        view: isMusicView,
                         order: String(musicOrder),
                       },
                     ]
@@ -381,8 +700,8 @@ const SearchData = ({ themeColor }) => {
                                     />
                                   </div>
                                   <ProfileSet
-                                    isOpen={openProfile}
-                                    setIsOpen={setOpenProfile}
+                                    isOpen={isOpenProfile}
+                                    setIsOpen={setIsOpenProfile}
                                   />
                                 </div>
                               );
@@ -402,8 +721,8 @@ const SearchData = ({ themeColor }) => {
                                     />
                                   </div>
                                   <NewsSet
-                                    isOpen={openNews}
-                                    setIsOpen={setOpenNews}
+                                    isOpen={isOpenNews}
+                                    setIsOpen={setIsOpenNews}
                                   />
                                 </div>
                               );
@@ -423,8 +742,8 @@ const SearchData = ({ themeColor }) => {
                                     />
                                   </div>
                                   <ImageSet
-                                    isOpen={openImage}
-                                    setIsOpen={setOpenImage}
+                                    isOpen={isOpenImage}
+                                    setIsOpen={setIsOpenImage}
                                   />
                                 </div>
                               );
@@ -445,8 +764,8 @@ const SearchData = ({ themeColor }) => {
                                   </div>
 
                                   <MusicSet
-                                    isOpen={openMusic}
-                                    setIsOpen={setOpenMusic}
+                                    isOpen={isOpenMusic}
+                                    setIsOpen={setIsOpenMusic}
                                   />
                                 </div>
                               );
@@ -471,276 +790,25 @@ const SearchData = ({ themeColor }) => {
           )}
         </div>
       </div>
-      {modalAdd && (
+      {isModalAdd && (
         <AddSeachWord
-          setModalAdd={setModalAdd}
+          setIsModalAdd={setIsModalAdd}
           themeColor={themeColor}
           getSeachDataList={getSeachDataList}
         />
       )}
-      <ModalSave modalSave={modalSave} />
-      {confirmDelete && (
+      <ModalSave isModalSave={isModalSave} />
+      {isConfirmDelete && (
         <ConfirmDelete
           themeColor={themeColor}
-          setConfirmDelete={setConfirmDelete}
+          setIsConfirmDelete={setIsConfirmDelete}
           deleteSearchData={deleteSearchData}
         />
       )}
-      <ModalDelete modalDelete={modalDelete} />
-      {windowPreview && <Preview word={selected} />}
+      <ModalDelete isModalDelete={isModalDelete} />
+      {isWindowPreview && <Preview word={selected} />}
     </div>
   );
-}
-
-function ModalSection({ themeColor, boxModal, modalSection }) {
-  const dispatch = useDispatch();
-  const { view: profileView } = useSelector((state) => state.profileReducer);
-  const { view: newsView } = useSelector((state) => state.newsReducer);
-  const { view: imageView } = useSelector((state) => state.imageReducer);
-  const { view: musicView } = useSelector((state) => state.musicReducer);
-
-  const hadleView = (e) => {
-    switch (e.target.id) {
-      case 'profile': {
-        dispatch(changeProfile({ view: e.target.checked }));
-
-        break;
-      }
-
-      case 'news': {
-        dispatch(changeNews({ view: e.target.checked }));
-
-        break;
-      }
-
-      case 'image': {
-        dispatch(changeImage({ view: e.target.checked }));
-
-        break;
-      }
-
-      case 'music': {
-        dispatch(changeMusic({ view: e.target.checked }));
-
-        break;
-      }
-      // No default
-    }
-  };
-
-  return (
-    <div
-      ref={boxModal}
-      className={
-        modalSection
-          ? 'modalsection-container'
-          : 'modalsection-container hidden'
-      }
-      style={{ border: `1px solid ${themeColor}` }}
-    >
-      <div>
-        <input
-          type="checkbox"
-          id="profile"
-          className="profile-check-box"
-          checked={profileView}
-          onChange={hadleView}
-        />
-        <label htmlFor="profile" className="text-profile">
-          프로필
-        </label>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          id="news"
-          className="news-check-box"
-          checked={newsView}
-          onChange={hadleView}
-        />
-        <label htmlFor="news" className="text-news">
-          뉴스
-        </label>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          id="image"
-          className="image-check-box"
-          checked={imageView}
-          onChange={hadleView}
-        />
-        <label htmlFor="image" className="text-image">
-          이미지
-        </label>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          id="music"
-          className="music-check-box"
-          checked={musicView}
-          onChange={hadleView}
-        />
-        <label htmlFor="music" className="text-music">
-          음악
-        </label>
-      </div>
-    </div>
-  );
-}
-
-function AddSeachWord({ themeColor, setModalAdd, getSeachDataList }) {
-  const [searchWord, setSearchWord] = useState('');
-  const [isChecked, setIsChecked] = useState(true);
-  const [alertText, setAlertText] = useState(
-    '검색어는 최대 16자까지 가능합니다. (자음,모음 불가)',
-  );
-
-  const addSearhData = async () => {
-    if (searchWord !== '' && isChecked) {
-      const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_API}/search`,
-        { word: searchWord },
-        {
-          withCredentials: true,
-        },
-      );
-
-      if (res.status === 200) {
-        await setAlertText('이미 등록된 단어입니다.');
-        await setIsChecked(false);
-      } else if (res.status === 201) {
-        await setSearchWord('');
-        await axios
-          .get(`${process.env.REACT_APP_SERVER_API}/auto`, {
-            withCredentials: true,
-          })
-          .then(() => {
-            getSeachDataList();
-            setModalAdd(false);
-          });
-      }
-    }
-  };
-
-  const handleCheck = (e) => {
-    setSearchWord(e.target.value);
-    setAlertText(
-      '자동완성 검색어는 최대 16자까지 가능합니다. (자음,모음 불가)',
-    );
-
-    if (e.target.value === '') {
-      setIsChecked(true);
-    } else {
-      setIsChecked(checkAutoComplete(e.target.value));
-    }
-  };
-
-  return (
-    <div className="bg-modal">
-      <div className="add-container">
-        <div
-          className="btn-close"
-          onClick={() => {
-            setModalAdd(false);
-          }}
-        >
-          <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
-        </div>
-        <div className="box-input-add">
-          <input
-            type="text"
-            id="input-new-word"
-            value={searchWord}
-            onChange={handleCheck}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                addSearhData();
-              }
-            }}
-          />
-          <div id={isChecked ? 'message-hidden' : 'message'}>{alertText}</div>
-          <button
-            id={
-              isChecked && searchWord !== ''
-                ? 'btn-add-seachword'
-                : 'btn-add-seachword-none'
-            }
-            style={{
-              backgroundColor:
-                isChecked && searchWord !== ''
-                  ? themeColor
-                  : 'rgb(190, 190, 190)',
-            }}
-            onClick={addSearhData}
-          >
-            추가
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ModalSave({ modalSave }) {
-  return (
-    <div
-      className={
-        modalSave ? 'modalsave-container' : 'modalsave-container hidden'
-      }
-    >
-      <FontAwesomeIcon
-        icon={faCheckCircle}
-        className="icon-save"
-      ></FontAwesomeIcon>
-      <div className="text-save">저장 완료</div>
-    </div>
-  );
-}
-
-function ConfirmDelete({ setConfirmDelete, deleteSearchData, themeColor }) {
-  return (
-    <div className="confirmdelete-container">
-      <FontAwesomeIcon icon={faTrash} className="icon-delete"></FontAwesomeIcon>
-      <div className="text-delete">해당 검색어를 삭제하시겠습니까?</div>
-      <div className="box-btn-delete">
-        <button
-          className="btn-delete-cancel"
-          onClick={() => {
-            setConfirmDelete(false);
-          }}
-        >
-          취소
-        </button>
-        <button
-          className="btn-delete-accept"
-          style={{
-            backgroundColor: themeColor,
-          }}
-          onClick={deleteSearchData}
-        >
-          확인
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function ModalDelete({ modalDelete }) {
-  return (
-    <div
-      className={
-        modalDelete ? 'modaldelete-container' : 'modaldelete-container hidden'
-      }
-    >
-      <FontAwesomeIcon
-        icon={faCheckCircle}
-        className="icon-delete-complete"
-      ></FontAwesomeIcon>
-      <div className="text-delete-complete">삭제되었습니다.</div>
-    </div>
-  );
-}
+};
 
 export default SearchData;

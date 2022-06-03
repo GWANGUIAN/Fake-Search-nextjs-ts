@@ -14,7 +14,10 @@ const initialState: ProfileState = {
   subinfo: [],
 };
 
-const profileReducer = (state = initialState, action: AnyAction) => {
+const profileReducer = (
+  state = initialState,
+  action: AnyAction,
+): ProfileState => {
   switch (action.type) {
     case CHANGEPROFILE:
       return {

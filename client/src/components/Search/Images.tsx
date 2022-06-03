@@ -6,7 +6,7 @@ interface Props {
   imageData: ImageContentConfigration;
 }
 
-const Image = ({ imageData }: Props) => (
+const Images = ({ imageData }: Props) => (
   <div className="image-container">
     <div className="section-title">이미지</div>
     <div className="box-images">
@@ -83,4 +83,4 @@ const Image = ({ imageData }: Props) => (
   </div>
 );
 
-export default Image;
+export default Images;
