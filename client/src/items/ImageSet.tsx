@@ -172,10 +172,10 @@ const ImageSet = ({ isOpen, setIsOpen }: Props) => {
       </div>
       {isOpen && (
         <div css={imageBox}>
-          {createImageElement(content.img1 as string, 'img1')}
-          {createImageElement(content.img2 as string, 'img2')}
-          {createImageElement(content.img3 as string, 'img3')}
-          {createImageElement(content.img4 as string, 'img4')}
+          {createImageElement(content.img1, 'img1')}
+          {createImageElement(content.img2, 'img2')}
+          {createImageElement(content.img3, 'img3')}
+          {createImageElement(content.img4, 'img4')}
         </div>
       )}
     </div>

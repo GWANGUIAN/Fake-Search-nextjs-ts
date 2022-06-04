@@ -119,7 +119,7 @@ const Withdrawal = ({ setConfirmWithdrawal }: Props) => {
             취소
           </button>
           <button
-            css={buttonCss(true, themeColor as string)}
+            css={buttonCss(true, themeColor)}
             style={{
               backgroundColor: themeColor,
             }}
