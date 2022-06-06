@@ -113,7 +113,7 @@ const Withdrawal = ({ setConfirmWithdrawal }: Props) => {
           >
             취소
           </button>
-          <button css={button(themeColor as string)} onClick={submitWithrawal}>
+          <button css={button(themeColor)} onClick={submitWithrawal}>
             확인
           </button>
         </div>

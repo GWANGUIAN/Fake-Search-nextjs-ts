@@ -184,10 +184,7 @@ const Site = () => {
             onChange={handleSiteName}
           />
           <button
-            css={submitButton(
-              isChecked && siteNameForm !== '',
-              themeColor as string,
-            )}
+            css={submitButton(isChecked && siteNameForm !== '', themeColor)}
             onClick={changeSiteName}
           >
             변경하기

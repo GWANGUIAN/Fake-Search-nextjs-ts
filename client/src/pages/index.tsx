@@ -399,7 +399,7 @@ const Home: NextPage = () => {
           </div>
           <div css={searchFormContainer}>
             <div
-              css={[logo, fontColor(themeColor as string)]}
+              css={[logo, fontColor(themeColor)]}
               onClick={() => {
                 window.location.replace('/');
               }}
@@ -410,12 +410,8 @@ const Home: NextPage = () => {
               <div
                 css={
                   isOnFocus
-                    ? [
-                        autoSearchBox,
-                        onFocusSearchBox,
-                        themeBorder(themeColor as string),
-                      ]
-                    : [autoSearchBox, themeBorder(themeColor as string)]
+                    ? [autoSearchBox, onFocusSearchBox, themeBorder(themeColor)]
+                    : [autoSearchBox, themeBorder(themeColor)]
                 }
               >
                 <div
@@ -487,7 +483,7 @@ const Home: NextPage = () => {
           </div>
           <div css={searchFormContainer}>
             <div
-              css={[logo, fontColor(themeColor as string)]}
+              css={[logo, fontColor(themeColor)]}
               onClick={() => {
                 window.location.replace('/');
               }}
@@ -498,12 +494,8 @@ const Home: NextPage = () => {
               <div
                 css={
                   isOnFocus
-                    ? [
-                        autoSearchBox,
-                        onFocusSearchBox,
-                        themeBorder(themeColor as string),
-                      ]
-                    : [autoSearchBox, themeBorder(themeColor as string)]
+                    ? [autoSearchBox, onFocusSearchBox, themeBorder(themeColor)]
+                    : [autoSearchBox, themeBorder(themeColor)]
                 }
               >
                 <div

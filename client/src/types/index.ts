@@ -23,3 +23,8 @@ export interface SearchWordOption {
   value: string;
   label: string;
 }
+
+export interface SelectMenuOption {
+  value: number;
+  label: string;
+}
