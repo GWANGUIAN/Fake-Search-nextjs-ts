@@ -144,7 +144,7 @@ const Setting = () => {
 
   const isAuthenticated = useCallback(async () => {
     await axios
-      .get(`${process.env.REACT_APP_SERVER_API}/users/auth`, {
+      .get(`${process.env.NEXT_PUBLIC_SERVER_API}/users/auth`, {
         withCredentials: true,
       })
       .then((res) => {

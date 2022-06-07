@@ -185,7 +185,7 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
     const body = new FormData();
     body.append('files', pictureFiles[0]);
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/post/upload_files`, body, {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/post/upload_files`, body, {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'multipart/form-data' },
       })
@@ -193,7 +193,7 @@ const ElOfNews = ({ newsContentConfiguration, id }: PropsOfEl) => {
         const data = [...content];
         data[id] = {
           ...data[id],
-          img: `${process.env.REACT_APP_SERVER_API}/${res.data.filename}`,
+          img: `${process.env.NEXT_PUBLIC_SERVER_API}/${res.data.filename}`,
         };
         dispatch(changeNews({ content: data }));
       })

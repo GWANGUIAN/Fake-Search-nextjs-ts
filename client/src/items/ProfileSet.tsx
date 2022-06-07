@@ -1,15 +1,15 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 import {
   faMinusCircle,
   faTimesCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { changeProfile, resetProfile } from '../redux/actions';
-import type { RootState } from '../redux/reducers';
+import { changeProfile, resetProfile } from "../redux/actions";
+import type { RootState } from "../redux/reducers";
 import {
   alignItems,
   flex,
@@ -17,14 +17,14 @@ import {
   sectionDeleteBtn,
   sectionOpenBtn,
   sectionTitle,
-} from '../styles/global';
+} from "../styles/global";
 import type {
   ProfileInfo,
   ProfileSubInfo,
   ProfileSubInfoContent,
-} from '../types/state';
-import { logger } from '../utils/logger';
-import ImageUpload from './ImageUpload';
+} from "../types/state";
+import { logger } from "../utils/logger";
+import ImageUpload from "./ImageUpload";
 
 const profileSetContainer = css`
   background-color: white;
@@ -328,21 +328,21 @@ const ElOfSubinfo = ({ el, id, index }: PropsOfElOfSubInfo) => {
 
   const onDrop = (pictureFiles: File[]) => {
     const body = new FormData();
-    body.append('files', pictureFiles[0]);
+    body.append("files", pictureFiles[0]);
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/post/upload_files`, body, {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/post/upload_files`, body, {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         const data = [...subinfo];
         data[id].content[
           index
-        ].image = `${process.env.REACT_APP_SERVER_API}/${res.data.filename}`;
+        ].image = `${process.env.NEXT_PUBLIC_SERVER_API}/${res.data.filename}`;
         dispatch(
           changeProfile({
             subinfo: data,
-          }),
+          })
         );
       })
       .catch((error) => {
@@ -352,11 +352,11 @@ const ElOfSubinfo = ({ el, id, index }: PropsOfElOfSubInfo) => {
 
   const deleteSubinfoImg = () => {
     const data = [...subinfo];
-    data[id].content[index].image = '';
+    data[id].content[index].image = "";
     dispatch(
       changeProfile({
         subinfo: data,
-      }),
+      })
     );
   };
 
@@ -366,7 +366,7 @@ const ElOfSubinfo = ({ el, id, index }: PropsOfElOfSubInfo) => {
         <div css={subInfoImageLine}>
           <ImageUpload onDrop={onDrop} imageData={el.image} />
         </div>
-        {el.image !== '' && (
+        {el.image !== "" && (
           <FontAwesomeIcon
             css={subInfoImageDeleteBtn}
             icon={faTimesCircle}
@@ -416,7 +416,7 @@ const BoxOfSubinfo = ({ profileSubInfo, id }: PropsOfSubInfo) => {
 
   const addSubinfoContent = () => {
     const data = [...subinfo];
-    data[id].content.push({ image: '', title: '' });
+    data[id].content.push({ image: "", title: "" });
     dispatch(changeProfile({ subinfo: data }));
   };
 
@@ -506,7 +506,7 @@ interface Props {
 const ProfileSet = ({ isOpen, setIsOpen }: Props) => {
   const dispatch = useDispatch();
   const { job, info, name, subinfo, profileImg } = useSelector(
-    (state: RootState) => state.profileReducer,
+    (state: RootState) => state.profileReducer
   );
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -515,32 +515,32 @@ const ProfileSet = ({ isOpen, setIsOpen }: Props) => {
 
   const addInfo = () => {
     const data = [...info];
-    data.push({ title: '', content: '' });
+    data.push({ title: "", content: "" });
     dispatch(changeProfile({ info: data }));
   };
 
   const addSubinfo = () => {
     const data = [...subinfo];
     data.push({
-      title: '',
-      content: [{ image: '', title: '' }],
+      title: "",
+      content: [{ image: "", title: "" }],
     });
     dispatch(changeProfile({ subinfo: data }));
   };
 
   const onDrop = (pictureFiles: File[]) => {
     const body = new FormData();
-    body.append('files', pictureFiles[0]);
+    body.append("files", pictureFiles[0]);
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/post/upload_files`, body, {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/post/upload_files`, body, {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         dispatch(
           changeProfile({
-            profileImg: `${process.env.REACT_APP_SERVER_API}/${res.data.filename}`,
-          }),
+            profileImg: `${process.env.NEXT_PUBLIC_SERVER_API}/${res.data.filename}`,
+          })
         );
       })
       .catch((error) => {
@@ -549,12 +549,12 @@ const ProfileSet = ({ isOpen, setIsOpen }: Props) => {
   };
 
   const deleteProfile = () => {
-    dispatch(changeProfile({ profileImg: '' }));
+    dispatch(changeProfile({ profileImg: "" }));
   };
 
   return (
     <div css={profileSetContainer}>
-      <div css={[flex, alignItems('center')]}>
+      <div css={[flex, alignItems("center")]}>
         <div css={sectionTitle}>프로필</div>
         <div
           css={sectionOpenBtn}
@@ -562,7 +562,7 @@ const ProfileSet = ({ isOpen, setIsOpen }: Props) => {
             setIsOpen(!isOpen);
           }}
         >
-          {isOpen ? '닫기' : '열기'}
+          {isOpen ? "닫기" : "열기"}
         </div>
         <div
           css={sectionDeleteBtn}
@@ -598,7 +598,7 @@ const ProfileSet = ({ isOpen, setIsOpen }: Props) => {
               <div css={profileImageLine}>
                 <ImageUpload imageData={profileImg} onDrop={onDrop} />
               </div>
-              {profileImg !== '' && (
+              {profileImg !== "" && (
                 <FontAwesomeIcon
                   css={profileImageDeleteBtn}
                   icon={faTimesCircle}

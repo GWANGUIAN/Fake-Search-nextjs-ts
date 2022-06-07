@@ -133,7 +133,7 @@ const AddSeachWord = ({
   const addSearhData = async () => {
     if (searchWord !== '' && isChecked) {
       const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_API}/search`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/search`,
         { word: searchWord },
         {
           withCredentials: true,
@@ -146,7 +146,7 @@ const AddSeachWord = ({
       } else if (res.status === 201) {
         await setSearchWord('');
         await axios
-          .get(`${process.env.REACT_APP_SERVER_API}/auto`, {
+          .get(`${process.env.NEXT_PUBLIC_SERVER_API}/auto`, {
             withCredentials: true,
           })
           .then(() => {
@@ -206,7 +206,9 @@ const AddSeachWord = ({
                   ? themeColor
                   : 'rgb(190, 190, 190)',
             }}
-            onClick={void addSearhData}
+            onClick={() => {
+              void addSearhData();
+            }}
           >
             추가
           </button>
@@ -380,7 +382,7 @@ const SearchData = ({ themeColor }: Props) => {
 
   const getSeachDataList = async () => {
     const res = await axios.get<SearchWordList[]>(
-      `${process.env.REACT_APP_SERVER_API}/search`,
+      `${process.env.NEXT_PUBLIC_SERVER_API}/search`,
       {
         withCredentials: true,
       },
@@ -401,7 +403,7 @@ const SearchData = ({ themeColor }: Props) => {
     setIsOpenImage(false);
     setIsOpenMusic(false);
     const res = await axios.get<SearchDataConfig>(
-      `${process.env.REACT_APP_SERVER_API}/search/word`,
+      `${process.env.NEXT_PUBLIC_SERVER_API}/search/word`,
       {
         params: { word: e.value },
         withCredentials: true,
@@ -490,7 +492,7 @@ const SearchData = ({ themeColor }: Props) => {
   const submitSearchData = () => {
     axios
       .patch(
-        `${process.env.REACT_APP_SERVER_API}/search`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/search`,
         {
           word: selected.value,
           profile: profileReducer,
@@ -517,7 +519,7 @@ const SearchData = ({ themeColor }: Props) => {
 
   const deleteSearchData = () => {
     axios
-      .delete(`${process.env.REACT_APP_SERVER_API}/search`, {
+      .delete(`${process.env.NEXT_PUBLIC_SERVER_API}/search`, {
         data: { word: selected.value },
         withCredentials: true,
       })
@@ -567,7 +569,9 @@ const SearchData = ({ themeColor }: Props) => {
           <Select
             id="input-seachWord"
             options={searchWordList}
-            onChange={void selectSearchData}
+            onChange={() => {
+              void selectSearchData;
+            }}
             value={selected}
           />
           <button
@@ -583,7 +587,13 @@ const SearchData = ({ themeColor }: Props) => {
         </div>
         <div className="box-subcontrol2">
           <div id="btn-preview">
-            <span onClick={void openPreview}>미리보기</span>
+            <span
+              onClick={() => {
+                void openPreview();
+              }}
+            >
+              미리보기
+            </span>
           </div>
           <div id="btn-add-word">
             <span

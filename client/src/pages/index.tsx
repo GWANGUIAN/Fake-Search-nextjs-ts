@@ -314,7 +314,7 @@ const Home: NextPage = () => {
     ) {
       const word = filterAutoComplete(e.target.value);
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_API}/auto/filtered`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/auto/filtered`,
         { params: { word, userId: id }, withCredentials: true },
       );
       setAutoComplete(res.data as AutoCompleteConfig[]);
@@ -432,7 +432,9 @@ const Home: NextPage = () => {
                   <input
                     type="text"
                     css={searchInput}
-                    onChange={void handleSeachWord}
+                    onChange={(e) => {
+                      void handleSeachWord(e);
+                    }}
                     onFocus={() => {
                       setIsOnFocus(true);
                     }}
@@ -517,7 +519,9 @@ const Home: NextPage = () => {
                     type="text"
                     css={searchInput}
                     value={searchWord}
-                    onChange={void handleSeachWord}
+                    onChange={(e) => {
+                      void handleSeachWord(e);
+                    }}
                     onFocus={() => {
                       setIsOnFocus(true);
                       setIsMobile(true);

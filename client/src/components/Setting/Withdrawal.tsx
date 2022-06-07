@@ -84,7 +84,7 @@ const Withdrawal = ({ setConfirmWithdrawal }: Props) => {
 
   const submitWithrawal = () => {
     axios
-      .delete(`${process.env.REACT_APP_SERVER_API}/users/withdrawal`, {
+      .delete(`${process.env.NEXT_PUBLIC_SERVER_API}/users/withdrawal`, {
         withCredentials: true,
       })
       .then(() => {

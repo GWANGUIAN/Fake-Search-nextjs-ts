@@ -104,7 +104,7 @@ const ImageSet = ({ isOpen, setIsOpen }: Props) => {
     const body = new FormData();
     body.append('files', pictureFiles[0]);
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/post/upload_files`, body, {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/post/upload_files`, body, {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'multipart/form-data' },
       })
@@ -114,7 +114,7 @@ const ImageSet = ({ isOpen, setIsOpen }: Props) => {
             changeImage({
               content: {
                 ...content,
-                [imgNum]: `${process.env.REACT_APP_SERVER_API}/${res.data.filename}`,
+                [imgNum]: `${process.env.NEXT_PUBLIC_SERVER_API}/${res.data.filename}`,
               },
             }),
           );
