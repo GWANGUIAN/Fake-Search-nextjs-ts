@@ -235,7 +235,7 @@ const Setting = () => {
             <Select
               css={selectMenu}
               options={menuList}
-              onChange={void selectSetting}
+              onChange={(e) => void selectSetting(e!)}
               value={selected}
             />
           </div>
