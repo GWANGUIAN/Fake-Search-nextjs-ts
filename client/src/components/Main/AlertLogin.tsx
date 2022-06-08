@@ -45,7 +45,7 @@ interface AlertLoginProps {
 const AlertLogin = ({ modal, el }: AlertLoginProps) => {
   const guestLogin = () => {
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/users/guest-login`, '', {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/users/guest-login`, '', {
         withCredentials: true,
       })
       .then(() => {

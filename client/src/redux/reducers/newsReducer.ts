@@ -10,7 +10,7 @@ const initialState: NewsState = {
   content: [{ title: '', content: '', datetime: '', reporter: '', img: '' }],
 };
 
-const newsReducer = (state = initialState, action: AnyAction) => {
+const newsReducer = (state = initialState, action: AnyAction): NewsState => {
   switch (action.type) {
     case CHANGENEWS:
       return {

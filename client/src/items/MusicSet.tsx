@@ -62,6 +62,11 @@ const albumImage = css`
   justify-content: center;
   align-items: center;
   position: relative;
+  @media (max-width: 753px) {
+    p {
+      display: none;
+    }
+  }
 `;
 
 const albumDeleteBtn = css`
@@ -97,14 +102,14 @@ const MusicSet = ({ isOpen, setIsOpen }: Props) => {
     const body = new FormData();
     body.append('files', pictureFiles[0]);
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/post/upload_files`, body, {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/post/upload_files`, body, {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {
         dispatch(
           changeMusic({
-            album: `${process.env.REACT_APP_SERVER_API}/${res.data.filename}`,
+            album: `${process.env.NEXT_PUBLIC_SERVER_API}/${res.data.filename}`,
           }),
         );
       })

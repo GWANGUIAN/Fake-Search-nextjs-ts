@@ -172,7 +172,7 @@ const AutoComplete = ({ themeColor }: Props) => {
     try {
       if (autoCompleteWord !== '' && isChecked) {
         const res = await axios.post(
-          `${process.env.REACT_APP_SERVER_API}/auto`,
+          `${process.env.NEXT_PUBLIC_SERVER_API}/auto`,
           { word: autoCompleteWord },
           {
             withCredentials: true,
@@ -186,7 +186,7 @@ const AutoComplete = ({ themeColor }: Props) => {
           setAutoCompleteWord('');
           await axios
             .get<AutoCompleteConfig[]>(
-              `${process.env.REACT_APP_SERVER_API}/auto`,
+              `${process.env.NEXT_PUBLIC_SERVER_API}/auto`,
               {
                 withCredentials: true,
               },
@@ -203,14 +203,14 @@ const AutoComplete = ({ themeColor }: Props) => {
 
   const deleteAutoComplete = (id: number) => {
     axios
-      .delete(`${process.env.REACT_APP_SERVER_API}/auto`, {
+      .delete(`${process.env.NEXT_PUBLIC_SERVER_API}/auto`, {
         data: { id },
         withCredentials: true,
       })
       .then(() => {
         void axios
           .get<AutoCompleteConfig[]>(
-            `${process.env.REACT_APP_SERVER_API}/auto`,
+            `${process.env.NEXT_PUBLIC_SERVER_API}/auto`,
             {
               withCredentials: true,
             },
@@ -246,7 +246,9 @@ const AutoComplete = ({ themeColor }: Props) => {
           />
           <button
             css={addButton(isChecked && autoCompleteWord !== '', themeColor)}
-            onClick={void addAutoComplete}
+            onClick={() => {
+              void addAutoComplete();
+            }}
           >
             추가
           </button>

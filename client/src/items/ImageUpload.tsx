@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import ImageUploader from 'react-images-upload';
+import dynamic from 'next/dynamic';
 
 const wholeImgBox = css`
   width: 100%;
@@ -40,6 +40,10 @@ interface Props {
   onDrop: (pictureFiles: File[], imgNum?: string) => void;
   imgNum?: string;
 }
+
+const ImageUploader = dynamic(() => import('react-images-upload'), {
+  ssr: false,
+});
 
 const ImageUpload = ({ imageData, onDrop, imgNum }: Props) => (
   <div css={wholeImgBox}>

@@ -14,7 +14,7 @@ const initialState: MusicState = {
   artist: '',
 };
 
-const musicReducer = (state = initialState, action: AnyAction) => {
+const musicReducer = (state = initialState, action: AnyAction): MusicState => {
   switch (action.type) {
     case CHANGEMUSIC:
       return {

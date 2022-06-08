@@ -314,7 +314,7 @@ const Home: NextPage = () => {
     ) {
       const word = filterAutoComplete(e.target.value);
       const res = await axios.get(
-        `${process.env.REACT_APP_SERVER_API}/auto/filtered`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/auto/filtered`,
         { params: { word, userId: id }, withCredentials: true },
       );
       setAutoComplete(res.data as AutoCompleteConfig[]);
@@ -399,7 +399,7 @@ const Home: NextPage = () => {
           </div>
           <div css={searchFormContainer}>
             <div
-              css={[logo, fontColor(themeColor as string)]}
+              css={[logo, fontColor(themeColor)]}
               onClick={() => {
                 window.location.replace('/');
               }}
@@ -410,12 +410,8 @@ const Home: NextPage = () => {
               <div
                 css={
                   isOnFocus
-                    ? [
-                        autoSearchBox,
-                        onFocusSearchBox,
-                        themeBorder(themeColor as string),
-                      ]
-                    : [autoSearchBox, themeBorder(themeColor as string)]
+                    ? [autoSearchBox, onFocusSearchBox, themeBorder(themeColor)]
+                    : [autoSearchBox, themeBorder(themeColor)]
                 }
               >
                 <div
@@ -436,7 +432,9 @@ const Home: NextPage = () => {
                   <input
                     type="text"
                     css={searchInput}
-                    onChange={void handleSeachWord}
+                    onChange={(e) => {
+                      void handleSeachWord(e);
+                    }}
                     onFocus={() => {
                       setIsOnFocus(true);
                     }}
@@ -487,7 +485,7 @@ const Home: NextPage = () => {
           </div>
           <div css={searchFormContainer}>
             <div
-              css={[logo, fontColor(themeColor as string)]}
+              css={[logo, fontColor(themeColor)]}
               onClick={() => {
                 window.location.replace('/');
               }}
@@ -498,12 +496,8 @@ const Home: NextPage = () => {
               <div
                 css={
                   isOnFocus
-                    ? [
-                        autoSearchBox,
-                        onFocusSearchBox,
-                        themeBorder(themeColor as string),
-                      ]
-                    : [autoSearchBox, themeBorder(themeColor as string)]
+                    ? [autoSearchBox, onFocusSearchBox, themeBorder(themeColor)]
+                    : [autoSearchBox, themeBorder(themeColor)]
                 }
               >
                 <div
@@ -525,7 +519,9 @@ const Home: NextPage = () => {
                     type="text"
                     css={searchInput}
                     value={searchWord}
-                    onChange={void handleSeachWord}
+                    onChange={(e) => {
+                      void handleSeachWord(e);
+                    }}
                     onFocus={() => {
                       setIsOnFocus(true);
                       setIsMobile(true);

@@ -180,3 +180,11 @@ export const sectionTextarea = css`
     border-radius: 2px;
   }
 `;
+
+export const bottomBorder = (color: string) => css`
+  border-bottom: 1px solid ${color};
+`;
+
+export const minWidth = (width: number) => css`
+  min-width: ${width}px;
+`;

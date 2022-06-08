@@ -1,3 +1,10 @@
+import type {
+  ImageContentConfigration,
+  NewsContentConfiguration,
+  ProfileInfo,
+  ProfileSubInfo,
+} from '../../types/state';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
@@ -35,15 +42,12 @@ export const changeProfile =
   (state: {
     type?: 'profile';
     order?: number;
-    view?: number;
+    view?: boolean;
     job?: string;
     profileImg?: string;
     name?: string;
-    info?: Array<{ title: string; content: string }>;
-    subinfo?: Array<{
-      title: string;
-      content: Array<{ image: string; title: string }>;
-    }>;
+    info?: ProfileInfo[];
+    subinfo?: ProfileSubInfo[];
   }) =>
   (dispatch: any) => {
     dispatch({
@@ -61,15 +65,9 @@ export const resetProfile = () => (dispatch: any) => {
 export const changeNews =
   (state: {
     type?: 'news';
-    view?: number;
+    view?: boolean;
     order?: number;
-    content?: Array<{
-      title: string;
-      content: string;
-      datetime: string;
-      reporter: string;
-      img: string;
-    }>;
+    content?: NewsContentConfiguration[];
   }) =>
   (dispatch: any) => {
     dispatch({
@@ -87,9 +85,9 @@ export const resetNews = () => (dispatch: any) => {
 export const changeImage =
   (state: {
     type?: 'image';
-    view?: number;
+    view?: boolean;
     order?: number;
-    content?: Array<{ img1: string; img2: string; img3: string; img4: string }>;
+    content?: ImageContentConfigration;
   }) =>
   (dispatch: any) => {
     dispatch({
@@ -107,7 +105,7 @@ export const resetImage = () => (dispatch: any) => {
 export const changeMusic =
   (state: {
     type?: 'music';
-    view?: number;
+    view?: boolean;
     album?: string;
     info?: string;
     date?: string;

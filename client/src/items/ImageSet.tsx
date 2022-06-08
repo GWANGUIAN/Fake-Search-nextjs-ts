@@ -70,6 +70,11 @@ const imageElementLine = css`
   margin-bottom: 5px;
   height: 150px;
   width: 98%;
+  @media (max-width: 753px) {
+    p {
+      display: none;
+    }
+  }
 `;
 
 const deleteBtn = css`
@@ -99,7 +104,7 @@ const ImageSet = ({ isOpen, setIsOpen }: Props) => {
     const body = new FormData();
     body.append('files', pictureFiles[0]);
     axios
-      .post(`${process.env.REACT_APP_SERVER_API}/post/upload_files`, body, {
+      .post(`${process.env.NEXT_PUBLIC_SERVER_API}/post/upload_files`, body, {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'multipart/form-data' },
       })
@@ -109,7 +114,7 @@ const ImageSet = ({ isOpen, setIsOpen }: Props) => {
             changeImage({
               content: {
                 ...content,
-                [imgNum]: `${process.env.REACT_APP_SERVER_API}/${res.data.filename}`,
+                [imgNum]: `${process.env.NEXT_PUBLIC_SERVER_API}/${res.data.filename}`,
               },
             }),
           );
@@ -167,10 +172,10 @@ const ImageSet = ({ isOpen, setIsOpen }: Props) => {
       </div>
       {isOpen && (
         <div css={imageBox}>
-          {createImageElement(content.img1 as string, 'img1')}
-          {createImageElement(content.img2 as string, 'img2')}
-          {createImageElement(content.img3 as string, 'img3')}
-          {createImageElement(content.img4 as string, 'img4')}
+          {createImageElement(content.img1, 'img1')}
+          {createImageElement(content.img2, 'img2')}
+          {createImageElement(content.img3, 'img3')}
+          {createImageElement(content.img4, 'img4')}
         </div>
       )}
     </div>

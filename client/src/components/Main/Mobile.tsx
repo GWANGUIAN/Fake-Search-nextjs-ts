@@ -157,7 +157,7 @@ const Mobile = ({ setMobileInput, searchWord, setSearchWord }: MobileProps) => {
     ) {
       const word = filterAutoComplete(e.target.value);
       const res = await axios.get<AutoCompleteConfig[]>(
-        `${process.env.REACT_APP_SERVER_API}/auto/filtered`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/auto/filtered`,
         { params: { word, userId: id }, withCredentials: true },
       );
       setAutoComplete(res.data);
@@ -177,7 +177,7 @@ const Mobile = ({ setMobileInput, searchWord, setSearchWord }: MobileProps) => {
       const word = filterAutoComplete(searchWord);
       axios
         .get<AutoCompleteConfig[]>(
-          `${process.env.REACT_APP_SERVER_API}/auto/filtered`,
+          `${process.env.NEXT_PUBLIC_SERVER_API}/auto/filtered`,
           {
             params: { word, userId: id },
             withCredentials: true,

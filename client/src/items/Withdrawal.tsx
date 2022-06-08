@@ -3,10 +3,10 @@ import axios from 'axios';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import type { RootState } from '../../redux/reducers';
-import { logger } from '../../utils/logger';
+import type { RootState } from '../redux/reducers';
+import { logger } from '../utils/logger';
 
-const withdrawalContainer = css`
+const withDrawalContainer = css`
   width: 100%;
   height: 100%;
   top: 0;
@@ -40,14 +40,14 @@ const confirmBox = css`
   z-index: 10;
 `;
 
-const confirmText = css`
+const withDrawalText = css`
   margin-top: 3%;
   flex: 1;
   font-size: 1.15em;
   font-weight: 600;
 `;
 
-const warningInfo = css`
+const deleteInfo = css`
   flex: 1;
   font-size: 0.8em;
 `;
@@ -59,7 +59,7 @@ const buttonBox = css`
   align-items: center;
 `;
 
-const button = (bgColor = 'rgb(192, 192, 192)') => css`
+const buttonCss = (isAccept: boolean, bgColor: string) => css`
   box-shadow: none;
   border: none;
   outline: inherit;
@@ -67,12 +67,17 @@ const button = (bgColor = 'rgb(192, 192, 192)') => css`
   width: 50px;
   min-width: 50px;
   height: 35px;
-  margin-right: 10px;
+  margin-left: 10px;
   border-radius: 10px;
-  background-color: ${bgColor};
   color: rgb(255, 255, 255);
   font-size: 1.05em;
   font-weight: 500;
+  background-color: ${bgColor};
+  &:hover {
+    background-color: ${isAccept
+      ? 'inherit'
+      : 'background-color: rgb(192, 192, 192)'};
+  }
 `;
 
 interface Props {
@@ -96,24 +101,30 @@ const Withdrawal = ({ setConfirmWithdrawal }: Props) => {
   };
 
   return (
-    <div css={withdrawalContainer}>
+    <div css={withDrawalContainer}>
       <div css={confirmBox}>
-        <div css={confirmText}>탈퇴 하시겠습니까?</div>
-        <div css={warningInfo}>
+        <div css={withDrawalText}>탈퇴 하시겠습니까?</div>
+        <div css={deleteInfo}>
           탈퇴 후, 계정 정보가 삭제되며,
           <br />
           모든 데이터는 복구가 불가능 합니다.
         </div>
         <div css={buttonBox}>
           <button
-            css={button()}
+            css={buttonCss(false, 'rgb(192, 192, 192)')}
             onClick={() => {
               setConfirmWithdrawal(false);
             }}
           >
             취소
           </button>
-          <button css={button(themeColor)} onClick={submitWithrawal}>
+          <button
+            css={buttonCss(true, themeColor)}
+            style={{
+              backgroundColor: themeColor,
+            }}
+            onClick={submitWithrawal}
+          >
             확인
           </button>
         </div>

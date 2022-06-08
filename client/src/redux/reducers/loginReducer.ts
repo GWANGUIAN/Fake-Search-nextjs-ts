@@ -11,7 +11,7 @@ const initialState: LoginState = {
   themeColor: '#2260FF',
 };
 
-const loginReducer = (state = initialState, action: AnyAction) => {
+const loginReducer = (state = initialState, action: AnyAction): LoginState => {
   switch (action.type) {
     case LOGIN:
       return {

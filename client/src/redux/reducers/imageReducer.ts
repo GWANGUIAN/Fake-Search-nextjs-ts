@@ -10,7 +10,7 @@ const initialState: ImageState = {
   content: { img1: '', img2: '', img3: '', img4: '' },
 };
 
-const imageReducer = (state = initialState, action: AnyAction) => {
+const imageReducer = (state = initialState, action: AnyAction): ImageState => {
   switch (action.type) {
     case CHANGEIMAGE:
       return {
