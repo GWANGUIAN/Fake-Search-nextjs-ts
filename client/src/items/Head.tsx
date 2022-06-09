@@ -9,6 +9,7 @@ const Head = () => (
     />
     <title>FAKESEARCH : 페이크서치</title>
     <script src="https://developers.kakao.com/sdk/js/kakao.min.js" />
+    <link rel="shortcut icon" href="/favicon.svg" />
   </NextHead>
 );
 
