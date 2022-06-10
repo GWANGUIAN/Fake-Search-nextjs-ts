@@ -325,9 +325,9 @@ const Home: NextPage = () => {
     }
   };
 
-  const moveToSearch = (e: KeyboardEvent) => {
+  const moveToSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      window.location.replace(`/search/query=${searchWord}`);
+      void router.push(`/search/${searchWord}`);
     }
   };
 
@@ -401,7 +401,7 @@ const Home: NextPage = () => {
             <div
               css={[logo, fontColor(themeColor)]}
               onClick={() => {
-                window.location.replace('/');
+                void router.replace(router.asPath);
               }}
             >
               {siteName}
@@ -424,10 +424,13 @@ const Home: NextPage = () => {
                   <button
                     css={searchButton}
                     onClick={() => {
-                      window.location.replace(`/search/query=${searchWord}`);
+                      void router.push(`/search/${searchWord}`);
                     }}
                   >
-                    <FontAwesomeIcon icon={faSearch} />
+                    <FontAwesomeIcon
+                      style={{ width: '20px' }}
+                      icon={faSearch}
+                    />
                   </button>
                   <input
                     type="text"
@@ -441,7 +444,9 @@ const Home: NextPage = () => {
                     onBlur={() => {
                       setIsOnFocus(false);
                     }}
-                    onKeyPress={void moveToSearch}
+                    onKeyPress={(e) => {
+                      void moveToSearch(e);
+                    }}
                   ></input>
                 </div>
                 {searchWord === '' && autoComplete.length === 0
@@ -510,7 +515,7 @@ const Home: NextPage = () => {
                   <button
                     css={searchButton}
                     onClick={() => {
-                      window.location.replace(`/search/query=${searchWord}`);
+                      void router.push(`/search/${searchWord}`);
                     }}
                   >
                     <FontAwesomeIcon icon={faSearch} />

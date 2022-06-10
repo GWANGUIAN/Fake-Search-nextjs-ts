@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -13,6 +14,22 @@ import News from '../../components/Search/News';
 import NotFound from '../../components/Search/NotFound';
 import Profile from '../../components/Search/Profile';
 import type { RootState } from '../../redux/reducers';
+import {
+  categoryBox,
+  categoryText,
+  contentBox,
+  flexColumn,
+  fontColor,
+  inputBox,
+  inputInnerBox,
+  logoBox,
+  minWidth,
+  mobileCategoryNone,
+  searchIcon,
+  searchInput,
+  settingBox,
+  settingIcon,
+} from '../../styles/global';
 import type { SearchDataConfig } from '../../types';
 import type {
   ImageState,
@@ -21,6 +38,18 @@ import type {
   ProfileState,
 } from '../../types/state';
 import changeDomain from '../../utils/changeDomain';
+
+const searchContainer = css`
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0 auto;
+`;
+
+const settingBoxOn = css`
+  background-color: rgb(226, 226, 226);
+  min-width: 30px;
+`;
 
 const Search = () => {
   const router = useRouter();
@@ -54,7 +83,7 @@ const Search = () => {
 
   const getSearchData = useCallback(async () => {
     const res = await axios.get<SearchDataConfig>(
-      `${process.env.REACT_APP_SERVER_API}/search/word`,
+      `${process.env.NEXT_PUBLIC_SERVER_API}/search/word`,
       {
         params: { word },
         withCredentials: true,
@@ -85,44 +114,40 @@ const Search = () => {
 
   return (
     <>
-      <div className="search-container">
-        <div className="box-menu">
-          <div
-            className="box-input"
-            style={{ borderBottom: `1px solid ${themeColor}` }}
-          >
-            <div className="inner-box-input">
+      <div css={searchContainer}>
+        <div css={[flexColumn]}>
+          <div css={inputBox(themeColor)}>
+            <div css={inputInnerBox}>
               <div
-                className="box-logo"
-                style={{ color: themeColor }}
+                css={[logoBox, fontColor(themeColor)]}
                 onClick={() => {
-                  window.location.replace('/');
+                  void router.replace('/');
                 }}
               >
                 {changeDomain(siteName)}
               </div>
               <input
-                className="input-search"
+                css={searchInput}
                 value={searchWord}
                 onChange={(e) => {
                   setSearchWord(e.target.value);
                 }}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
-                    window.location.replace(`/search/query=${searchWord}`);
+                    void router.replace(`/search/${searchWord}`);
                   }
                 }}
               />
               <FontAwesomeIcon
-                className="icon-search"
+                css={searchIcon}
                 icon={faSearch}
                 style={{ color: themeColor }}
                 onClick={() => {
-                  window.location.replace(`/search/query=${searchWord}`);
+                  void router.replace(`/search/${searchWord}`);
                 }}
               />
               <div
-                className={isOpenModal ? 'box-setting on' : 'box-setting'}
+                css={[settingBox, isOpenModal && settingBoxOn]}
                 onClick={() => {
                   if (!isLogin) {
                     setIsOpenModal(!isOpenModal);
@@ -132,33 +157,46 @@ const Search = () => {
                 }}
                 ref={btnSetting}
               >
-                <FontAwesomeIcon className="icon-setting" icon={faCog} />
+                <FontAwesomeIcon css={settingIcon} icon={faCog} />
               </div>
 
               <AlertLogin el={notification} modal={isOpenModal} />
             </div>
           </div>
-          <div className="box-category">
-            <div className="inner-box-category">
-              <div
-                className="text-categories all"
-                style={{ color: themeColor }}
-              >
+          <div css={categoryBox}>
+            <div>
+              <div css={[categoryText, minWidth(40), fontColor(themeColor)]}>
                 통합
               </div>
-              <div className="text-categories view">블로그</div>
-              <div className="text-categories image">이미지</div>
-              <div className="text-categories video">동영상</div>
-              <div className="text-categories shopping">쇼핑</div>
-              <div className="text-categories news">뉴스</div>
-              <div className="text-categories dictionary">어학사전</div>
-              <div className="text-categories map">지도</div>
-              <div className="text-categories more">더보기</div>
+              <div css={[categoryText, minWidth(45)]}>블로그</div>
+              <div css={[categoryText, minWidth(45)]}>이미지</div>
+              <div css={[categoryText, minWidth(45)]}>동영상</div>
+              <div css={[categoryText, minWidth(40), mobileCategoryNone]}>
+                쇼핑
+              </div>
+              <div css={[categoryText, minWidth(40), mobileCategoryNone]}>
+                뉴스
+              </div>
+              <div css={[categoryText, minWidth(60), mobileCategoryNone]}>
+                어학사전
+              </div>
+              <div css={[categoryText, minWidth(40), mobileCategoryNone]}>
+                지도
+              </div>
+              <div
+                css={[
+                  categoryText,
+                  minWidth(45),
+                  fontColor('rgb(149, 149, 149)'),
+                ]}
+              >
+                더보기
+              </div>
             </div>
           </div>
         </div>
-        <div className="box-content">
-          <div className="inner-box-content">
+        <div css={contentBox}>
+          <div>
             {searchData
               .sort((a, b) => a.order - b.order)
               .map((el, id) => {
