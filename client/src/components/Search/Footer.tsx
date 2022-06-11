@@ -47,9 +47,12 @@ const creator = css`
 
 const blog = css`
   font-weight: 200;
-  color: rgb(63, 63, 63);
+  color: #3f3f3f;
   text-decoration: none;
   font-size: 0.95em;
+  &:visited {
+    color: #3f3f3f;
+  }
 `;
 
 const Footer = () => (

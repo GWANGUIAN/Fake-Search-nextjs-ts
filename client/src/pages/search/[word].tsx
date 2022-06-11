@@ -29,7 +29,7 @@ import {
   searchInput,
   settingBox,
   settingIcon,
-} from '../../styles/global';
+} from '../../styles/common';
 import type { SearchDataConfig } from '../../types';
 import type {
   ImageState,

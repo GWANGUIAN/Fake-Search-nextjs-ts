@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '../../redux/reducers';
-import { displayFlex, fontColor, fontWeight } from '../../styles/global';
+import { displayFlex, fontColor, fontWeight } from '../../styles/common';
 import type { AutoCompleteConfig } from '../../types';
 import filterAutoComplete from '../../utils/filterAutoComplete';
 import { logger } from '../../utils/logger';

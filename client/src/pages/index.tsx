@@ -19,7 +19,7 @@ import {
   displayNone,
   fontColor,
   fontWeight,
-} from '../styles/global';
+} from '../styles/common';
 import type { AutoCompleteConfig } from '../types';
 import filterAutoComplete from '../utils/filterAutoComplete';
 import { logger } from '../utils/logger';

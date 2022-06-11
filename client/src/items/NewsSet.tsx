@@ -18,7 +18,7 @@ import {
   sectionDeleteBtn,
   sectionOpenBtn,
   sectionTitle,
-} from '../styles/global';
+} from '../styles/common';
 import type { NewsContentConfiguration } from '../types/state';
 import { logger } from '../utils/logger';
 import ImageUpload from './ImageUpload';

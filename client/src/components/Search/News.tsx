@@ -2,7 +2,7 @@
 /* eslint-disable unicorn/prefer-add-event-listener */
 import { css } from '@emotion/react';
 
-import { flexNum } from '../../styles/global';
+import { flexNum } from '../../styles/common';
 import type { NewsContentConfiguration, NewsState } from '../../types/state';
 
 const newsContainer = css`

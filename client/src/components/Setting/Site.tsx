@@ -12,7 +12,7 @@ import {
   hidden,
   marginPercent,
   pointer,
-} from '../../styles/global';
+} from '../../styles/common';
 import checkSiteName from '../../utils/checkSiteName';
 import { logger } from '../../utils/logger';
 
@@ -61,7 +61,7 @@ const nameInput = css`
 const submitButton = (isActive: boolean, bgColor: string) => css`
   border: inherit;
   outline: inherit;
-  cursor: pointer;
+  cursor: ${isActive ? 'point' : 'default'};
   min-width: 80px;
   height: 90%;
   border-radius: 5px;
@@ -70,9 +70,6 @@ const submitButton = (isActive: boolean, bgColor: string) => css`
   font-weight: 500;
   ${!isActive && 'width: 90px;'}
   background-color: ${isActive ? bgColor : 'rgb(190, 190, 190)'};
-  &:hover {
-    background-color: inherit;
-  }
 `;
 
 const alertText = css`

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { login } from '../redux/actions';
 import type { RootState } from '../redux/reducers';
-import { displayNone } from '../styles/global';
+import { displayNone } from '../styles/common';
 import { logger } from '../utils/logger';
 
 const colorContainer = css`

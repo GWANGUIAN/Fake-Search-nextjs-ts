@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-import { hidden, margin } from '../../styles/global';
+import { hidden, margin } from '../../styles/common';
 import type { AutoCompleteConfig } from '../../types';
 import checkAutoComplete from '../../utils/checkAutoComplete';
 import { logger } from '../../utils/logger';
