@@ -1,18 +1,13 @@
 import { css } from '@emotion/react';
 import { faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import AlertLogin from '../../components/Main/AlertLogin';
 import Footer from '../../components/Search/Footer';
-import Images from '../../components/Search/Images';
-import Music from '../../components/Search/Music';
-import News from '../../components/Search/News';
 import NotFound from '../../components/Search/NotFound';
-import Profile from '../../components/Search/Profile';
 import type { RootState } from '../../redux/reducers';
 import {
   categoryBox,
@@ -30,15 +25,7 @@ import {
   settingBox,
   settingIcon,
 } from '../../styles/common';
-import type { SearchDataConfig } from '../../types';
-import type {
-  ImageState,
-  MusicState,
-  NewsState,
-  ProfileState,
-} from '../../types/state';
 import changeDomain from '../../utils/changeDomain';
-import { logger } from '../../utils/logger';
 
 const searchContainer = css`
   display: flex;
@@ -60,9 +47,6 @@ const Search = () => {
   const btnSetting = useRef<HTMLDivElement>(null);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [searchData, setSearchData] = useState<
-    Array<ProfileState | NewsState | ImageState | MusicState>
-  >([]);
   const [searchWord, setSearchWord] = useState(word);
 
   const { isLogin, siteName, themeColor } = useSelector(
@@ -81,33 +65,6 @@ const Search = () => {
       setIsOpenModal(false);
     }
   };
-
-  const getSearchData = useCallback(async () => {
-    try {
-      const res = await axios.get<SearchDataConfig>(
-        `${process.env.NEXT_PUBLIC_SERVER_API}/search/word`,
-        {
-          params: { word },
-          withCredentials: true,
-        },
-      );
-
-      if (res.data !== null) {
-        setSearchData([
-          res.data.profile,
-          res.data.news,
-          res.data.image,
-          res.data.music,
-        ]);
-      }
-    } catch (error) {
-      logger.error(error);
-    }
-  }, [setSearchData, word]);
-
-  useEffect(() => {
-    void getSearchData();
-  }, [getSearchData]);
 
   useEffect(() => {
     window.addEventListener('click', handleClickOutside);
@@ -202,25 +159,7 @@ const Search = () => {
         </div>
         <div css={contentBox}>
           <div>
-            {searchData
-              .sort((a, b) => a.order - b.order)
-              .map((el, id) => {
-                if (el.type === 'profile' && el.view) {
-                  return <Profile key={id} profileData={el} />;
-                } else if (el.type === 'news' && el.view) {
-                  return <News key={id} newsData={el} />;
-                } else if (el.type === 'image' && el.view) {
-                  return <Images key={id} imageData={el.content} />;
-                } else if (el.type === 'music' && el.view) {
-                  return <Music key={id} musicData={el} />;
-                }
-
-                return '';
-              })}
-            {(searchData.length === 0 ||
-              searchData.every((el) => !el.view)) && (
-              <NotFound word={word as string} />
-            )}
+            <NotFound word={''} />
           </div>
         </div>
       </div>

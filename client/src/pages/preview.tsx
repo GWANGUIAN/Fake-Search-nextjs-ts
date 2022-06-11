@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import NewWindow from 'react-new-window';
-import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import Footer from '../components/Search/Footer';
 import Images from '../components/Search/Images';
@@ -10,7 +10,6 @@ import Music from '../components/Search/Music';
 import News from '../components/Search/News';
 import NotFound from '../components/Search/NotFound';
 import Profile from '../components/Search/Profile';
-import type { RootState } from '../redux/reducers';
 import {
   categoryBox,
   categoryText,
@@ -25,8 +24,13 @@ import {
   searchInput,
   settingBox,
   settingIcon,
-} from '../styles/global';
-import type { SearchWordOption } from '../types';
+} from '../styles/common';
+import type {
+  ImageState,
+  MusicState,
+  NewsState,
+  ProfileState,
+} from '../types/state';
 import changeDomain from '../utils/changeDomain';
 
 const previewContainer = css`
@@ -50,22 +54,70 @@ const inputInnerBox = css`
   }
 `;
 
-interface Props {
-  word: SearchWordOption;
+interface IData {
+  profileReducer: ProfileState;
+  newsReducer: NewsState;
+  imageReducer: ImageState;
+  musicReducer: MusicState;
 }
 
-const Preview = ({ word }: Props) => {
-  const { themeColor, siteName } = useSelector(
-    (state: RootState) => state.loginReducer,
-  );
+const Preview = () => {
+  const { word, searchData, siteData } = useRouter().query;
+  const [profile, setProfile] = useState<ProfileState>({
+    type: 'profile',
+    order: 1,
+    view: false,
+    job: '',
+    profileImg: '',
+    name: '',
+    info: [{ title: '', content: '' }],
+    subinfo: [],
+  });
+  const [news, setNews] = useState<NewsState>({
+    type: 'news',
+    view: false,
+    order: 2,
+    content: [{ title: '', content: '', datetime: '', reporter: '', img: '' }],
+  });
+  const [image, setImage] = useState<ImageState>({
+    type: 'image',
+    view: false,
+    order: 3,
+    content: { img1: '', img2: '', img3: '', img4: '' },
+  });
+  const [music, setMusic] = useState<MusicState>({
+    type: 'music',
+    view: false,
+    album: '',
+    info: '',
+    date: '',
+    order: 4,
+    title: '',
+    artist: '',
+  });
+  const [siteName, setSiteName] = useState('FAKESEARCH');
+  const [themeColor, setThemeColor] = useState('#2260FF');
 
-  const profileData = useSelector((state: RootState) => state.profileReducer);
-  const newsData = useSelector((state: RootState) => state.newsReducer);
-  const imageData = useSelector((state: RootState) => state.imageReducer);
-  const musicData = useSelector((state: RootState) => state.musicReducer);
+  useEffect(() => {
+    if (searchData !== undefined) {
+      const { profileReducer, newsReducer, imageReducer, musicReducer }: IData =
+        JSON.parse(searchData as string);
+      setProfile(profileReducer);
+      setNews(newsReducer);
+      setImage(imageReducer);
+      setMusic(musicReducer);
+    }
+
+    if (siteData !== undefined) {
+      const { name, color }: { name: string; color: string } = JSON.parse(
+        siteData as string,
+      );
+      setSiteName(name);
+      setThemeColor(color);
+    }
+  }, [searchData, siteData]);
 
   return (
-    // <NewWindow features={{ width: 1180, height: 800 }} title="미리보기">
     <div css={previewContainer}>
       <div css={flexColumn}>
         <div css={inputBox(themeColor)}>
@@ -73,7 +125,7 @@ const Preview = ({ word }: Props) => {
             <div css={[logoBox, fontColor(themeColor)]}>
               {changeDomain(siteName)}
             </div>
-            <input css={searchInput} value={word.value} />
+            <input css={searchInput} value={word} />
             <FontAwesomeIcon
               css={searchIcon}
               icon={faSearch}
@@ -118,7 +170,7 @@ const Preview = ({ word }: Props) => {
       </div>
       <div css={contentBox}>
         <div>
-          {[profileData, newsData, imageData, musicData]
+          {[profile, news, image, music]
             .sort((a, b) => a.order - b.order)
             .map((el, id) => {
               if (el.type === 'profile' && el.view) {
@@ -133,14 +185,13 @@ const Preview = ({ word }: Props) => {
 
               return '';
             })}
-          {[profileData, newsData, imageData, musicData].every(
-            (el) => !el.view,
-          ) && <NotFound word={word.value} />}
+          {[profile, news, image, music].every((el) => !el.view) && (
+            <NotFound word={word as string} />
+          )}
         </div>
       </div>
       <Footer />
     </div>
-    // </NewWindow>
   );
 };
 

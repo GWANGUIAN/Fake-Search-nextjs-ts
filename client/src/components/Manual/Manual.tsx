@@ -6,7 +6,7 @@ import { faForward, faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Slider from 'react-slick';
 
-import { fontColor, fontWeight, margin, textAlign } from '../../styles/global';
+import { fontColor, fontWeight, margin, textAlign } from '../../styles/common';
 
 const firstSlide = css`
   display: flex;

@@ -2,7 +2,7 @@
 /* eslint-disable unicorn/no-null */
 import { css } from '@emotion/react';
 
-import { margin } from '../../styles/global';
+import { margin } from '../../styles/common';
 import type { MusicState } from '../../types/state';
 
 interface Props {

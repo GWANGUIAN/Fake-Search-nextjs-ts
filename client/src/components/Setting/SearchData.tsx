@@ -12,6 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import type { DropResult } from 'react-beautiful-dnd';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
@@ -21,7 +22,7 @@ import Select from 'react-select';
 import ImageSet from '../../items/ImageSet';
 import MusicSet from '../../items/MusicSet';
 import NewsSet from '../../items/NewsSet';
-import Preview from '../../items/Preview';
+// import Preview from '../../items/Preview';
 import ProfileSet from '../../items/ProfileSet';
 import {
   changeImage,
@@ -45,7 +46,7 @@ import {
   hidden,
   margin,
   pointer,
-} from '../../styles/global';
+} from '../../styles/common';
 import type {
   SearchDataConfig,
   SearchWordList,
@@ -134,12 +135,12 @@ const previewButton = css`
   min-width: 60px;
   margin-left: auto;
   text-align: right;
-  span {
+  a {
     cursor: pointer;
     color: rgb(168, 168, 168);
     font-weight: 500;
   }
-  span:hover {
+  a:hover {
     font-weight: 1000;
   }
 `;
@@ -360,9 +361,6 @@ const addSearchWordButton = (isActive: boolean, bgColor: string) => css`
   font-weight: 500;
   margin: 0 auto;
   background-color: ${isActive ? bgColor : 'rgb(190, 190, 190)'};
-  &:hover {
-    background-color: inherit;
-  }
 `;
 
 const saveModalContainer = css`
@@ -760,9 +758,10 @@ const ModalSection = ({
 
 interface Props {
   themeColor: string;
+  siteName: string;
 }
 
-const SearchData = ({ themeColor }: Props) => {
+const SearchData = ({ themeColor, siteName }: Props) => {
   const { view: isProfileView, order: profileOrder } = useSelector(
     (state: RootState) => state.profileReducer,
   );
@@ -802,7 +801,7 @@ const SearchData = ({ themeColor }: Props) => {
   const [isOpenMusic, setIsOpenMusic] = useState(false);
   const [isResetDrag, setIsResetDrag] = useState(false);
 
-  const [isWindowPreview, setIsWindowPreview] = useState(false);
+  // const [isWindowPreview, setIsWindowPreview] = useState(false);
 
   const getSeachDataList = async () => {
     const res = await axios.get<SearchWordList[]>(
@@ -962,13 +961,6 @@ const SearchData = ({ themeColor }: Props) => {
       });
   };
 
-  const openPreview = async () => {
-    if (selected.value !== '') {
-      await setIsWindowPreview(false);
-      await setIsWindowPreview(true);
-    }
-  };
-
   useEffect(() => {
     window.addEventListener('click', handleClickOutside);
 
@@ -1007,13 +999,26 @@ const SearchData = ({ themeColor }: Props) => {
         </div>
         <div css={secondSubControlBox}>
           <div css={previewButton}>
-            <span
-              onClick={() => {
-                void openPreview();
+            <Link
+              href={{
+                pathname: '/preview',
+                query: {
+                  word: selected.value,
+                  searchData: JSON.stringify({
+                    profileReducer,
+                    newsReducer,
+                    imageReducer,
+                    musicReducer,
+                  }),
+                  siteData: JSON.stringify({
+                    name: siteName,
+                    color: themeColor,
+                  }),
+                },
               }}
             >
-              미리보기
-            </span>
+              <a target="_blank">미리보기</a>
+            </Link>
           </div>
           <div css={addWordButton}>
             <span
@@ -1236,7 +1241,7 @@ const SearchData = ({ themeColor }: Props) => {
         />
       )}
       <ModalDelete isModalDelete={isModalDelete} />
-      {isWindowPreview && <Preview word={selected} />}
+      {/* {isWindowPreview && <Preview word={selected} />} */}
     </div>
   );
 };

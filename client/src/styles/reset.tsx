@@ -24,7 +24,6 @@ export const globalStyles = css`
     padding: 0;
     border: 0;
     font-size: 100%;
-    font: inherit;
     vertical-align: baseline;
   }
 
@@ -56,14 +55,12 @@ export const globalStyles = css`
   }
 
   body {
-    /* line-height: 1; */
-    font-family: 'Pretendard-Regular';
-  }
-
-  ol,
-  ul {
-    list-style: none;
-  }
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
   blockquote,
   q {
@@ -399,11 +396,9 @@ export const globalStyles = css`
     text-decoration: none;
   }
   a:link {
-    color: #ffffff;
     text-decoration: none;
   }
   a:visited {
-    color: #ffffff;
     text-decoration: none;
   }
   a:hover {

@@ -120,7 +120,7 @@ const selectMenu = css`
 
 const Setting = () => {
   const router = useRouter();
-  const { themeColor, oauth } = useSelector(
+  const { themeColor, siteName, oauth } = useSelector(
     (state: RootState) => state.loginReducer,
   );
   const [tabMenu, setTabMenu] = useState(0);
@@ -174,13 +174,13 @@ const Setting = () => {
                 css={backIcon}
                 icon={faArrowLeft}
                 onClick={() => {
-                  void router.push('/');
+                  void router.back();
                 }}
               />
               <div
                 id="text-back"
                 onClick={() => {
-                  void router.push('/');
+                  void router.back();
                 }}
               >
                 돌아가기
@@ -229,7 +229,7 @@ const Setting = () => {
               css={backIcon}
               icon={faArrowLeft}
               onClick={() => {
-                void router.push('/');
+                void router.back();
               }}
             />
             <Select
@@ -245,7 +245,7 @@ const Setting = () => {
             ) : tabMenu === 1 ? (
               <AutoComplete themeColor={themeColor} />
             ) : (
-              <SearchData themeColor={themeColor} />
+              <SearchData themeColor={themeColor} siteName={siteName} />
             )}
           </div>
           {isOpenWithdrawal && (

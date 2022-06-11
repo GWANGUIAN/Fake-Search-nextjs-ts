@@ -18,7 +18,7 @@ import {
   sectionOpenBtn,
   sectionTitle,
   widthPx,
-} from '../styles/global';
+} from '../styles/common';
 import { logger } from '../utils/logger';
 import ImageUpload from './ImageUpload';
 

@@ -2,7 +2,7 @@
 /* eslint-disable unicorn/prefer-add-event-listener */
 import { css } from '@emotion/react';
 
-import { alignItems, flex, flexColumn } from '../../styles/global';
+import { alignItems, flex, flexColumn } from '../../styles/common';
 import type {
   ProfileInfo,
   ProfileState,
