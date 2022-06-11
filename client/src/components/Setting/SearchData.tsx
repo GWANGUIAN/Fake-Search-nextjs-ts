@@ -422,8 +422,8 @@ const deleteConfirmContainer = css`
 const deleteIcon = css`
   flex: 1;
   color: rgb(121, 121, 121);
-  font-size: 2em;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+  width: 25px;
 `;
 
 const commonDeleteButton = css`

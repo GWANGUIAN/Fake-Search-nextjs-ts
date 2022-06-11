@@ -12,12 +12,19 @@ import NotFound from '../components/Search/NotFound';
 import Profile from '../components/Search/Profile';
 import type { RootState } from '../redux/reducers';
 import {
-  alignItems,
-  bottomBorder,
-  flexCenter,
+  categoryBox,
+  categoryText,
+  contentBox,
   flexColumn,
   fontColor,
+  inputBox,
+  logoBox,
   minWidth,
+  mobileCategoryNone,
+  searchIcon,
+  searchInput,
+  settingBox,
+  settingIcon,
 } from '../styles/global';
 import type { SearchWordOption } from '../types';
 import changeDomain from '../utils/changeDomain';
@@ -30,15 +37,6 @@ const previewContainer = css`
   overflow-x: hidden;
 `;
 
-const inputBox = (color: string) => css`
-  ${flexCenter}
-  ${alignItems('center')}
-  ${bottomBorder(color)}
-  &:hover {
-    box-shadow: 0px 5px 4px rgb(233, 233, 233);
-  }
-`;
-
 const inputInnerBox = css`
   position: relative;
   max-width: 1180px;
@@ -49,107 +47,6 @@ const inputInnerBox = css`
   height: 64px;
   @media (max-width: 680px) {
     width: 100vw;
-  }
-`;
-
-const logoBox = css`
-  flex: 1;
-  text-align: center;
-  padding: 0px 18px 0 20px;
-  font-size: 2em;
-  font-weight: 1000;
-  position: relative;
-  max-width: 30px;
-  cursor: pointer;
-  @media (max-width: 440px) {
-    margin-left: 10px;
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translate(0%, -50%);
-    height: 50%;
-    border-right: 0.5px solid rgb(206, 206, 206);
-  }
-`;
-
-const searchInput = css`
-  flex: 15;
-  margin-left: 10px;
-  border: inherit;
-  font-size: 1.3em;
-  font-weight: 600;
-  vertical-align: middle;
-  min-width: 50px;
-  &:focus {
-    outline: none;
-  }
-`;
-
-const searchIcon = css`
-  flex: 0.5;
-  font-size: 1.3em;
-  cursor: pointer;
-`;
-
-const settingBox = css`
-  flex: 0.5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 15px;
-  height: 30px;
-  max-width: 30px;
-  border-radius: 50%;
-`;
-
-const settingIcon = css`
-  font-size: 1.2em;
-  color: rgb(173, 173, 173);
-  cursor: pointer;
-`;
-
-const categoryBox = css`
-  box-shadow: 0px 2px 3px rgb(209, 209, 209);
-  z-index: 10;
-  overflow-x: auto;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
-  }
-  > div {
-    max-width: 1180px;
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    height: 50px;
-    padding: 0 23px;
-  }
-`;
-
-const categoryText = css`
-  font-weight: 450;
-  margin: 0 10px;
-  cursor: pointer;
-`;
-
-const mobileCategoryNone = css`
-  @media (max-width: 680px) {
-    display: none;
-  }
-`;
-
-const contentBox = css`
-  background-color: rgb(242, 245, 246);
-  min-height: 87.92vh;
-  > div {
-    max-width: 1180px;
-    width: 100%;
-    margin: 0 auto;
   }
 `;
 
