@@ -217,7 +217,7 @@ export const logoBox = css`
   font-size: 2em;
   font-weight: 800;
   position: relative;
-  max-width: 30px;
+  max-width: 60px;
   cursor: pointer;
   @media (max-width: 440px) {
     margin-left: 10px;

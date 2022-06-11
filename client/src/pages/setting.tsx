@@ -149,14 +149,14 @@ const Setting = () => {
       })
       .then((res) => {
         if (!res.data) {
-          window.location.replace('/');
+          void router.replace('/');
         } else {
           setIsLoading(false);
         }
       })
       .catch((error) => {
         logger.log(error);
-        window.location.replace('/');
+        void router.replace('/');
       });
   }, []);
 
