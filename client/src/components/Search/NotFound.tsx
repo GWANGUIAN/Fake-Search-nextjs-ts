@@ -4,13 +4,13 @@ const notFoundContainer = css`
   margin: 10px 10px;
   background-color: white;
   border-radius: 20px;
-  padding: 70px 40px;
+  padding: 70px 80px;
   border: 2px solid rgb(235, 235, 235);
   @media (max-width: 730px) {
     padding: 50px 20px;
   }
   ul {
-    margin-left: 5px;
+    margin-left: 20px;
     font-size: 0.8em;
     color: rgb(104, 104, 104);
   }
@@ -20,12 +20,10 @@ const notFoundContainer = css`
 `;
 
 const titleText = css`
-  margin-left: 30px;
   margin-bottom: 40px;
   font-size: 1.3em;
   font-weight: 500;
   @media (max-width: 730px) {
-    margin-left: 15px;
     margin-bottom: 20px;
     font-size: 1.1em;
     font-weight: 500;
