@@ -1,11 +1,13 @@
 import axios from 'axios';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import Loading from '../components/Loading/Loading';
 import { logger } from '../utils/logger';
 
 const NaverLogin = () => {
+  const router = useRouter();
+
   const getNaverToken = async () => {
     const hash = Router.asPath.split('#')[1];
     const token = hash.split('=')[1].split('&')[0];
@@ -20,7 +22,7 @@ const NaverLogin = () => {
           withCredentials: true,
         },
       );
-      window.location.replace('/');
+      void router.replace('/');
     } catch (error) {
       logger.error(error);
     }

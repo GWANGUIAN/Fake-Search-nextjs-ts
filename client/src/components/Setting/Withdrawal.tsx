@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
@@ -80,6 +81,7 @@ interface Props {
 }
 
 const Withdrawal = ({ setConfirmWithdrawal }: Props) => {
+  const router = useRouter();
   const { themeColor } = useSelector((state: RootState) => state.loginReducer);
 
   const submitWithrawal = () => {
@@ -88,7 +90,7 @@ const Withdrawal = ({ setConfirmWithdrawal }: Props) => {
         withCredentials: true,
       })
       .then(() => {
-        window.location.replace('/');
+        void router.replace('/');
       })
       .catch((error) => {
         logger.error(error);

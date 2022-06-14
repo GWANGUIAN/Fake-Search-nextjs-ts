@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { faArrowLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -69,7 +70,7 @@ const logoBox = css`
   padding: 0px 18px 0 20px;
   font-size: 1.7em;
   position: relative;
-  max-width: 30px;
+  max-width: 60px;
   cursor: pointer;
   color: rgb(128, 128, 128);
   &::before {
@@ -79,7 +80,7 @@ const logoBox = css`
     right: 0;
     transform: translate(0%, -50%);
     height: 50%;
-    border-right: 0.5px solid rgb(206, 206, 206);
+    border-right: 2px solid rgb(206, 206, 206);
   }
 `;
 
@@ -108,31 +109,35 @@ interface AutoListProps {
   themeColor: string;
 }
 
-const AutoList = ({ el, searchWord, themeColor }: AutoListProps) => (
-  <div css={autoListContainer}>
-    <button>
-      <FontAwesomeIcon
-        icon={faSearch}
+const AutoList = ({ el, searchWord, themeColor }: AutoListProps) => {
+  const router = useRouter();
+
+  return (
+    <div css={autoListContainer}>
+      <button>
+        <FontAwesomeIcon
+          icon={faSearch}
+          onMouseDown={() => {
+            void router.push(`/search/${el.word}`);
+          }}
+        />
+      </button>
+      <div
+        css={autoText}
         onMouseDown={() => {
-          window.location.replace(`/search/query=${el.word}`);
+          void router.push(`/search/${el.word}`);
         }}
-      />
-    </button>
-    <div
-      css={autoText}
-      onMouseDown={() => {
-        window.location.replace(`/search/query=${el.word}`);
-      }}
-    >
-      <span id="part-search" css={[fontColor(themeColor), fontWeight(550)]}>
-        {filterAutoComplete(searchWord)}
-      </span>
-      <span>
-        {el.word.slice(filterAutoComplete(searchWord).length, el.word.length)}
-      </span>
+      >
+        <span id="part-search" css={[fontColor(themeColor), fontWeight(550)]}>
+          {filterAutoComplete(searchWord)}
+        </span>
+        <span>
+          {el.word.slice(filterAutoComplete(searchWord).length, el.word.length)}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 interface MobileProps {
   setMobileInput: React.Dispatch<React.SetStateAction<boolean>>;
@@ -146,6 +151,8 @@ const Mobile = ({ setMobileInput, searchWord, setSearchWord }: MobileProps) => {
   const { isLogin, themeColor, id } = useSelector(
     (state: RootState) => state.loginReducer,
   );
+
+  const router = useRouter();
 
   const handleSeachWord = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(e.target.value);
@@ -222,7 +229,7 @@ const Mobile = ({ setMobileInput, searchWord, setSearchWord }: MobileProps) => {
                 }}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
-                    window.location.replace(`/search/query=${searchWord}`);
+                    void router.push(`/search/${searchWord}`);
                   }
                 }}
                 autoFocus
@@ -232,7 +239,7 @@ const Mobile = ({ setMobileInput, searchWord, setSearchWord }: MobileProps) => {
                 icon={faSearch}
                 style={{ color: themeColor }}
                 onClick={() => {
-                  window.location.replace(`/search/query=${searchWord}`);
+                  void router.push(`/search/${searchWord}`);
                 }}
               />
             </div>

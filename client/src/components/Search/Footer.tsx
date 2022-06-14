@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useRouter } from 'next/router';
 
 const footerContainer = css`
   display: flex;
@@ -55,35 +56,39 @@ const blog = css`
   }
 `;
 
-const Footer = () => (
-  <div css={footerContainer}>
-    <div css={footerBox}>
-      <div css={logoTextEn}>
-        <span
-          onClick={() => {
-            window.location.replace('/');
-          }}
-        >
-          FAKESEARCH
-        </span>
-      </div>
-      <div css={logoTextKr}>
-        <span
-          onClick={() => {
-            window.location.replace('/');
-          }}
-        >
-          페이크서치
-        </span>
-      </div>
-      <div css={creator}>Creator</div>
-      <div>
-        <a css={blog} href="https://velog.io/@bbaa3218">
-          GWANGUIAN
-        </a>
+const Footer = () => {
+  const router = useRouter();
+
+  return (
+    <div css={footerContainer}>
+      <div css={footerBox}>
+        <div css={logoTextEn}>
+          <span
+            onClick={() => {
+              void router.replace('/');
+            }}
+          >
+            FAKESEARCH
+          </span>
+        </div>
+        <div css={logoTextKr}>
+          <span
+            onClick={() => {
+              void router.replace('/');
+            }}
+          >
+            페이크서치
+          </span>
+        </div>
+        <div css={creator}>Creator</div>
+        <div>
+          <a css={blog} href="https://velog.io/@bbaa3218">
+            GWANGUIAN
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Footer;

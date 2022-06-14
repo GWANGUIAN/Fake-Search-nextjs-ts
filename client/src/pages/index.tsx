@@ -6,13 +6,13 @@ import axios from 'axios';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { BrowserView, MobileOnlyView } from 'react-device-detect';
 import { useSelector } from 'react-redux';
 
 import Login from '../components/Login/Login';
 import AlertLogin from '../components/Main/AlertLogin';
 import Mobile from '../components/Main/Mobile';
 import Manual from '../components/Manual/Manual';
+import { useMobile } from '../hooks/useMobile';
 import type { RootState } from '../redux/reducers';
 import {
   background,
@@ -215,31 +215,35 @@ interface AutoListProps {
   themeColor: string;
 }
 
-const AutoList = ({ el, searchWord, themeColor }: AutoListProps) => (
-  <div css={autoListContainer}>
-    <button>
-      <FontAwesomeIcon
-        icon={faSearch}
+const AutoList = ({ el, searchWord, themeColor }: AutoListProps) => {
+  const router = useRouter();
+
+  return (
+    <div css={autoListContainer}>
+      <button>
+        <FontAwesomeIcon
+          icon={faSearch}
+          onMouseDown={() => {
+            void router.push(`/search/${el.word}`);
+          }}
+        />
+      </button>
+      <div
+        css={autoText}
         onMouseDown={() => {
-          window.location.replace(`/search/query=${el.word}`);
+          void router.push(`/search/${el.word}`);
         }}
-      />
-    </button>
-    <div
-      css={autoText}
-      onMouseDown={() => {
-        window.location.replace(`/search/query=${el.word}`);
-      }}
-    >
-      <span css={[fontColor(themeColor), fontWeight(550)]}>
-        {filterAutoComplete(searchWord)}
-      </span>
-      <span>
-        {el.word.slice(filterAutoComplete(searchWord).length, el.word.length)}
-      </span>
+      >
+        <span css={[fontColor(themeColor), fontWeight(550)]}>
+          {filterAutoComplete(searchWord)}
+        </span>
+        <span>
+          {el.word.slice(filterAutoComplete(searchWord).length, el.word.length)}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Home: NextPage = () => {
   const [isPopUpOpen, setIsPopUpOpen] = useState(true);
@@ -255,7 +259,8 @@ const Home: NextPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOnFocus, setIsOnFocus] = useState(false);
   const [isOpenLogin, setIsOpenLogin] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isActiveMobileInput, setIsActiveMobileInput] = useState(false);
+  const isMobile = useMobile();
   const router = useRouter();
 
   const handleClickOutside = ({ target }: MouseEvent) => {
@@ -297,7 +302,7 @@ const Home: NextPage = () => {
         withCredentials: true,
       })
       .then(() => {
-        window.location.reload();
+        void router.reload();
       })
       .catch((error) => {
         logger.error(error);
@@ -335,7 +340,7 @@ const Home: NextPage = () => {
     if (!isLogin) {
       setIsModalOpen(!isModalOpen);
     } else {
-      void router.push('/setting');
+      void router.push('/setting/site');
     }
   };
 
@@ -364,9 +369,9 @@ const Home: NextPage = () => {
     ></AutoList>
   ));
 
-  return (
-    <>
-      <BrowserView>
+  if (!isMobile) {
+    return (
+      <>
         <div css={mainContainer}>
           <div css={navContainer}>
             {!isLogin ? (
@@ -456,105 +461,108 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-      </BrowserView>
-      <MobileOnlyView>
-        <div css={isMobile ? displayNone : mainContainer}>
-          <div css={navContainer}>
-            {!isLogin ? (
-              <div
-                css={loginBtn}
-                ref={btnLogin}
-                onClick={() => {
-                  setIsOpenLogin(true);
-                }}
-              >
-                로그인
-              </div>
-            ) : (
-              <div css={loginBtn} onClick={hadleLogout}>
-                로그아웃
-              </div>
-            )}
+        <Login login={login} loginModal={isOpenLogin} />
+        {isPopUpOpen && <Manual setDate={setDate} />}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div css={isActiveMobileInput ? displayNone : mainContainer}>
+        <div css={navContainer}>
+          {!isLogin ? (
             <div
-              css={
-                isModalOpen
-                  ? [settingModal, background('rgb(207, 207, 207)')]
-                  : settingModal
-              }
-              onClick={hadleClickSetting}
-              ref={btnSetting}
-            >
-              <FontAwesomeIcon css={settingBtn} icon={faCog} />
-            </div>
-            <AlertLogin el={notification} modal={isModalOpen} />
-          </div>
-          <div css={searchFormContainer}>
-            <div
-              css={[logo, fontColor(themeColor)]}
+              css={loginBtn}
+              ref={btnLogin}
               onClick={() => {
-                window.location.replace('/');
+                setIsOpenLogin(true);
               }}
             >
-              {siteName}
+              로그인
             </div>
-            <div css={hiddenSearchBox}>
+          ) : (
+            <div css={loginBtn} onClick={hadleLogout}>
+              로그아웃
+            </div>
+          )}
+          <div
+            css={
+              isModalOpen
+                ? [settingModal, background('rgb(207, 207, 207)')]
+                : settingModal
+            }
+            onClick={hadleClickSetting}
+            ref={btnSetting}
+          >
+            <FontAwesomeIcon css={settingBtn} icon={faCog} />
+          </div>
+          <AlertLogin el={notification} modal={isModalOpen} />
+        </div>
+        <div css={searchFormContainer}>
+          <div
+            css={[logo, fontColor(themeColor)]}
+            onClick={() => {
+              void router.replace('/');
+            }}
+          >
+            {siteName}
+          </div>
+          <div css={hiddenSearchBox}>
+            <div
+              css={
+                isOnFocus
+                  ? [autoSearchBox, onFocusSearchBox, themeBorder(themeColor)]
+                  : [autoSearchBox, themeBorder(themeColor)]
+              }
+            >
               <div
                 css={
-                  isOnFocus
-                    ? [autoSearchBox, onFocusSearchBox, themeBorder(themeColor)]
-                    : [autoSearchBox, themeBorder(themeColor)]
+                  searchWord === '' || autoComplete.length === 0 || !isOnFocus
+                    ? innerSearchBox
+                    : [innerSearchBox, innerSearchBoxBorder]
                 }
               >
-                <div
-                  css={
-                    searchWord === '' || autoComplete.length === 0 || !isOnFocus
-                      ? innerSearchBox
-                      : [innerSearchBox, innerSearchBoxBorder]
-                  }
+                <button
+                  css={searchButton}
+                  onClick={() => {
+                    void router.push(`/search/${searchWord}`);
+                  }}
                 >
-                  <button
-                    css={searchButton}
-                    onClick={() => {
-                      void router.push(`/search/${searchWord}`);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faSearch} />
-                  </button>
-                  <input
-                    type="text"
-                    css={searchInput}
-                    value={searchWord}
-                    onChange={(e) => {
-                      void handleSeachWord(e);
-                    }}
-                    onFocus={() => {
-                      setIsOnFocus(true);
-                      setIsMobile(true);
-                    }}
-                    onBlur={() => {
-                      setIsOnFocus(false);
-                    }}
-                    onKeyPress={void moveToSearch}
-                  ></input>
-                </div>
-                {searchWord === '' && autoComplete.length === 0
-                  ? ''
-                  : isOnFocus && autoCompleteList}
+                  <FontAwesomeIcon icon={faSearch} />
+                </button>
+                <input
+                  type="text"
+                  css={searchInput}
+                  value={searchWord}
+                  onChange={(e) => {
+                    void handleSeachWord(e);
+                  }}
+                  onFocus={() => {
+                    setIsOnFocus(true);
+                    setIsActiveMobileInput(true);
+                  }}
+                  onBlur={() => {
+                    setIsOnFocus(false);
+                  }}
+                  onKeyPress={void moveToSearch}
+                ></input>
               </div>
+              {searchWord === '' && autoComplete.length === 0
+                ? ''
+                : isOnFocus && autoCompleteList}
             </div>
           </div>
         </div>
-        {isMobile && (
-          <Mobile
-            setMobileInput={setIsMobile}
-            searchWord={searchWord}
-            setSearchWord={setSearchWord}
-          />
-        )}
-      </MobileOnlyView>
-
+      </div>
+      {isActiveMobileInput && (
+        <Mobile
+          setMobileInput={setIsActiveMobileInput}
+          searchWord={searchWord}
+          setSearchWord={setSearchWord}
+        />
+      )}
       <Login login={login} loginModal={isOpenLogin} />
-      <BrowserView>{isPopUpOpen && <Manual setDate={setDate} />}</BrowserView>
     </>
   );
 };

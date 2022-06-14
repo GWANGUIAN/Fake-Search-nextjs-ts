@@ -157,7 +157,7 @@ const Search = () => {
                   if (!isLogin) {
                     setIsOpenModal(!isOpenModal);
                   } else {
-                    void router.push('/setting');
+                    void router.push('/setting/site');
                   }
                 }}
                 ref={btnSetting}

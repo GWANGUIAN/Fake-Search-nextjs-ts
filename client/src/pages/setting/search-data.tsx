@@ -7,13 +7,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 
-import AutoComplete from '../components/Setting/AutoComplete';
-import SearchData from '../components/Setting/SearchData';
-import Site from '../components/Setting/Site';
-import Withdrawal from '../components/Setting/Withdrawal';
-import type { RootState } from '../redux/reducers';
-import type { SelectMenuOption } from '../types';
-import { logger } from '../utils/logger';
+import SearchData from '../../components/Setting/SearchData';
+import Withdrawal from '../../components/Setting/Withdrawal';
+import type { RootState } from '../../redux/reducers';
+import type { SelectMenuOption } from '../../types';
+import { logger } from '../../utils/logger';
 
 const settingContainer = (bgColor: string) => css`
   display: flex;
@@ -123,13 +121,8 @@ const Setting = () => {
   const { themeColor, siteName, oauth } = useSelector(
     (state: RootState) => state.loginReducer,
   );
-  const [tabMenu, setTabMenu] = useState(0);
   const [isOpenWithdrawal, setIsOpenWithdrawal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [selected, setSelected] = useState<SelectMenuOption>({
-    value: 0,
-    label: '사이트 이름 및 테마 색상 설정',
-  });
 
   const menuList: SelectMenuOption[] = [
     { value: 0, label: '사이트 이름 및 테마 색상 설정' },
@@ -138,8 +131,19 @@ const Setting = () => {
   ];
 
   const selectSetting = (e: SelectMenuOption) => {
-    setSelected(e);
-    setTabMenu(e.value);
+    switch (e.value) {
+      case 0: {
+        void router.push('/setting/site');
+
+        break;
+      }
+
+      case 1: {
+        void router.push('/setting/auto-complete');
+
+        break;
+      }
+    }
   };
 
   const isAuthenticated = useCallback(async () => {
@@ -149,14 +153,14 @@ const Setting = () => {
       })
       .then((res) => {
         if (!res.data) {
-          window.location.replace('/');
+          void router.replace('/');
         } else {
           setIsLoading(false);
         }
       })
       .catch((error) => {
         logger.log(error);
-        window.location.replace('/');
+        void router.replace('/');
       });
   }, []);
 
@@ -174,45 +178,35 @@ const Setting = () => {
                 css={backIcon}
                 icon={faArrowLeft}
                 onClick={() => {
-                  void router.back();
+                  void router.push('/');
                 }}
               />
               <div
                 id="text-back"
                 onClick={() => {
-                  void router.back();
+                  void router.push('/');
                 }}
               >
                 돌아가기
               </div>
             </div>
             <div
-              css={menuStyle(tabMenu === 0, themeColor)}
+              css={menuStyle(false, themeColor)}
               onClick={() => {
-                setTabMenu(0);
-                setSelected(menuList[0]);
+                void router.push('/setting/site');
               }}
             >
               사이트 이름 및 테마 색상 설정
             </div>
             <div
-              css={menuStyle(tabMenu === 1, themeColor)}
+              css={menuStyle(false, themeColor)}
               onClick={() => {
-                setTabMenu(1);
-                setSelected(menuList[1]);
+                void router.push('/setting/auto-complete');
               }}
             >
               자동완성 검색어 설정
             </div>
-            <div
-              css={menuStyle(tabMenu === 2, themeColor)}
-              onClick={() => {
-                setTabMenu(2);
-                setSelected(menuList[2]);
-              }}
-            >
-              검색 페이지 설정
-            </div>
+            <div css={menuStyle(true, themeColor)}>검색 페이지 설정</div>
             {oauth !== 'guest' && (
               <div
                 css={withdrawalButton}
@@ -229,24 +223,21 @@ const Setting = () => {
               css={backIcon}
               icon={faArrowLeft}
               onClick={() => {
-                void router.back();
+                void router.push('/');
               }}
             />
             <Select
               css={selectMenu}
               options={menuList}
               onChange={(e) => void selectSetting(e!)}
-              value={selected}
+              defaultValue={{
+                value: 2,
+                label: '검색 페이지 설정',
+              }}
             />
           </div>
           <div css={contentBox}>
-            {tabMenu === 0 ? (
-              <Site />
-            ) : tabMenu === 1 ? (
-              <AutoComplete themeColor={themeColor} />
-            ) : (
-              <SearchData themeColor={themeColor} siteName={siteName} />
-            )}
+            <SearchData themeColor={themeColor} siteName={siteName} />
           </div>
           {isOpenWithdrawal && (
             <Withdrawal setConfirmWithdrawal={setIsOpenWithdrawal} />
