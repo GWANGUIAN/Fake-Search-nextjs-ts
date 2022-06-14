@@ -340,7 +340,7 @@ const Home: NextPage = () => {
     if (!isLogin) {
       setIsModalOpen(!isModalOpen);
     } else {
-      void router.push('/setting');
+      void router.push('/setting/site');
     }
   };
 
