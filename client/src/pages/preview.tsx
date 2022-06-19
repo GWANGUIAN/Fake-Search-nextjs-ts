@@ -62,7 +62,9 @@ interface IData {
 }
 
 const Preview = () => {
-  const { word, searchData, siteData } = useRouter().query;
+  const router = useRouter();
+  const { isReady, query } = router;
+  const { word, searchData, siteData } = query;
   const [profile, setProfile] = useState<ProfileState>({
     type: 'profile',
     order: 1,
@@ -99,23 +101,21 @@ const Preview = () => {
   const [themeColor, setThemeColor] = useState('#2260FF');
 
   useEffect(() => {
-    if (searchData !== undefined) {
+    if (isReady) {
       const { profileReducer, newsReducer, imageReducer, musicReducer }: IData =
         JSON.parse(searchData as string);
+      const { name, color }: { name: string; color: string } = JSON.parse(
+        siteData as string,
+      );
       setProfile(profileReducer);
       setNews(newsReducer);
       setImage(imageReducer);
       setMusic(musicReducer);
-    }
 
-    if (siteData !== undefined) {
-      const { name, color }: { name: string; color: string } = JSON.parse(
-        siteData as string,
-      );
       setSiteName(name);
       setThemeColor(color);
     }
-  }, [searchData, siteData]);
+  }, [isReady, searchData, siteData]);
 
   return (
     <div css={previewContainer}>
